@@ -46,6 +46,14 @@ const userSchema = new Schema<TUser, IUserModel>(
       type: String,
       default: null,
     },
+    followers: {
+      type: [String],
+      default: [],
+    },
+    following: {
+      type: [String],
+      default: [],
+    },
   },
   {
     timestamps: true,
