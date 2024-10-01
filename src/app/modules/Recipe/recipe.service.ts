@@ -29,6 +29,11 @@ const getAllRecipesFromDB = async (query: Record<string, unknown>) => {
   return result;
 };
 
+const getSingleRecipeFromDB = async (itemId: string) => {
+  const result = await Recipe.findById(itemId);
+  return result;
+};
+
 const voteOnRecipe = async (
   recipeId: string,
   email: string,
@@ -124,6 +129,7 @@ const deleteRecipeFromDB = async (id: string) => {
 export const RecipeServices = {
   createRecipeIntoDB,
   getAllRecipesFromDB,
+  getSingleRecipeFromDB,
   updateRecipeIntoDB,
   deleteRecipeFromDB,
   voteOnRecipe,

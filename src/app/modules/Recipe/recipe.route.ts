@@ -24,17 +24,19 @@ router.post(
   RecipeControllers.createRecipe
 );
 
-// router.get('/', RecipeControllers.createRecipe);
+router.get('/', RecipeControllers.getAllRecipe);
 
-// router.put(
-//   '/update-category/:id',
-//   auth(USER_ROLE.ADMIN),
-//   validateRequest(CategoryValidation.updateCategoryValidationSchema),
-//   CategoryControllers.updateCategory
-// );
+router.get('/:id', RecipeControllers.getSingleRecipe);
 
-// router.delete(
-//   '/delete-category/:id',
-//   auth(USER_ROLE.ADMIN),
-//   CategoryControllers.deleteCategory
-// );
+router.put(
+  '/update-recipe/:id',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER, USER_ROLE.PREMIUM),
+  validateRequest(RecipeValidation.updateRecipeValidationSchema),
+  RecipeControllers.updateRecipe
+);
+
+router.delete(
+  '/delete-recipe/:id',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER, USER_ROLE.PREMIUM),
+  RecipeControllers.deleteRecipe
+);

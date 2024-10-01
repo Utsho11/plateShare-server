@@ -23,6 +23,54 @@ const createRecipe = catchAsync(async (req, res) => {
   });
 });
 
+
+const getAllRecipe = catchAsync(async (req, res) => {
+  const item = await RecipeServices.getAllRecipesFromDB(req.query);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'All Recipe retrieved successfully',
+    data: item,
+  });
+});
+
+const getSingleRecipe = catchAsync(async (req, res) => {
+  const itemId = req.params.id;
+  const item = await RecipeServices.getSingleRecipeFromDB(itemId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Recipe retrieved successfully',
+    data: item,
+  });
+});
+
+const updateRecipe = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const updatedItem = await RecipeServices.updateRecipeIntoDB(id, req.body);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Recipe updated successfully',
+    data: updatedItem,
+  });
+});
+
+const deleteRecipe = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  await RecipeServices.deleteRecipeFromDB(id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Recipe deleted successfully',
+    data: null,
+  });
+});
+
 export const RecipeControllers = {
-  createRecipe,
+  createRecipe,getAllRecipe,deleteRecipe,updateRecipe,getSingleRecipe
 };
