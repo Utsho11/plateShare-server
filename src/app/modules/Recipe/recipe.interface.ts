@@ -14,7 +14,6 @@ export type TRecipe = {
   premium: boolean;
   email: string;
   isDeleted?: boolean;
-  upvotes?: number;
-  downvotes?: number;
-  votedUsers?: IVote[];
+  upvotes?: string[];
+  downvotes?: string[];
 };

@@ -23,7 +23,6 @@ const createRecipe = catchAsync(async (req, res) => {
   });
 });
 
-
 const getAllRecipe = catchAsync(async (req, res) => {
   const item = await RecipeServices.getAllRecipesFromDB(req.query);
 
@@ -71,6 +70,35 @@ const deleteRecipe = catchAsync(async (req, res) => {
   });
 });
 
+const voteOnRecipe = catchAsync(async (req, res) => {
+  const { recipeId } = req.params;
+  const { voteType } = req.query;
+
+  const email = req.user?.email;
+
+  if (!email) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Unauthorized');
+  }
+
+  await RecipeServices.voteOnRecipe(
+    recipeId,
+    email,
+    voteType as 'upvotes' | 'downvotes'
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Recipe vote updated successfully',
+    data: null,
+  });
+});
+
 export const RecipeControllers = {
-  createRecipe,getAllRecipe,deleteRecipe,updateRecipe,getSingleRecipe
+  createRecipe,
+  getAllRecipe,
+  deleteRecipe,
+  updateRecipe,
+  getSingleRecipe,
+  voteOnRecipe,
 };

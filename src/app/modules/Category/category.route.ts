@@ -4,6 +4,7 @@ import { USER_ROLE } from '../User/user.constant';
 import validateRequest from '../../middlewares/validateRequest';
 import { CategoryValidation } from './category.validation';
 import { CategoryControllers } from './category.controller';
+import { parseBody } from '../../middlewares/bodyParser';
 
 const router = express.Router();
 
@@ -13,6 +14,7 @@ router.post(
   '/create-category',
   auth(USER_ROLE.ADMIN),
   validateRequest(CategoryValidation.createCategoryValidationSchema),
+  parseBody,
   CategoryControllers.createCategory
 );
 

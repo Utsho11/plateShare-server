@@ -37,57 +37,70 @@ const getSingleRecipeFromDB = async (itemId: string) => {
 const voteOnRecipe = async (
   recipeId: string,
   email: string,
-  voteType: 'upvote' | 'downvote'
+  voteType: 'upvotes' | 'downvotes'
 ) => {
-  // Find the recipe
+  // Find the recipe by ID
+
   const recipe = await Recipe.findById(recipeId);
   if (!recipe) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Recipe not found');
+    throw new Error('Recipe not found');
   }
 
-  // Initialize downvotes and upvotes if undefined (not necessary if the default is set)
-  recipe.upvotes = recipe.upvotes || 0;
-  recipe.downvotes = recipe.downvotes || 0;
+  // Convert the Mongoose document into a plain object
+  const updatedRecipe = recipe.toObject();
 
-  // Check if the user (by email) has already voted
-  const existingVote = recipe.votedUsers?.find(
-    (voter) => voter.email === email
-  );
+  // Initialize upvotes and downvotes if they are undefined
+  updatedRecipe.upvotes = updatedRecipe.upvotes || [];
+  updatedRecipe.downvotes = updatedRecipe.downvotes || [];
 
-  if (existingVote) {
-    // If the vote is the same, remove the vote (undo action)
-    if (existingVote.voteType === voteType) {
-      recipe.votedUsers = recipe.votedUsers?.filter(
-        (voter) => voter.email !== email
+  if (voteType === 'upvotes') {
+    // Remove from downvotes if the user is switching vote
+    if (updatedRecipe.downvotes.includes(email)) {
+      updatedRecipe.downvotes = updatedRecipe.downvotes.filter(
+        (voter: string) => voter !== email
       );
-      if (voteType === 'upvote') {
-        recipe.upvotes--;
-      } else {
-        recipe.downvotes--;
-      }
-    } else {
-      // If the vote is different, change the vote
-      existingVote.voteType = voteType;
-      if (voteType === 'upvote') {
-        recipe.upvotes++;
-        recipe.downvotes--;
-      } else {
-        recipe.downvotes++;
-        recipe.upvotes--;
-      }
     }
-  } else {
-    // Add new vote with email
-    recipe.votedUsers?.push({ email, voteType });
-    if (voteType === 'upvote') {
-      recipe.upvotes++;
+
+    // Toggle upvote: add if not present, remove if already present
+    if (updatedRecipe.upvotes.includes(email)) {
+      updatedRecipe.upvotes = updatedRecipe.upvotes.filter(
+        (voter: string) => voter !== email
+      );
     } else {
-      recipe.downvotes++;
+      updatedRecipe.upvotes.push(email);
     }
   }
 
-  await recipe.save();
-  return recipe;
+  if (voteType === 'downvotes') {
+    // Remove from upvotes if the user is switching vote
+    if (updatedRecipe.upvotes.includes(email)) {
+      updatedRecipe.upvotes = updatedRecipe.upvotes.filter(
+        (voter: string) => voter !== email
+      );
+    }
+
+    // Toggle downvote: add if not present, remove if already present
+    if (updatedRecipe.downvotes.includes(email)) {
+      updatedRecipe.downvotes = updatedRecipe.downvotes.filter(
+        (voter: string) => voter !== email
+      );
+    } else {
+      updatedRecipe.downvotes.push(email);
+    }
+  }
+
+  // Save the updated recipe
+  try {
+    await Recipe.findByIdAndUpdate(
+      recipeId,
+      { upvotes: updatedRecipe.upvotes, downvotes: updatedRecipe.downvotes },
+      { new: true }
+    );
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error saving recipe:', error);
+    throw new Error('Error saving recipe');
+  }
 };
 
 // Update an existing recipe by ID

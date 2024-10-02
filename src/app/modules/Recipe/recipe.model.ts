@@ -45,24 +45,13 @@ const recipeSchema = new Schema<TRecipe>(
       default: false,
     },
     upvotes: {
-      type: Number,
-      default: 0,
+      type: [String],
+      default: [],
     },
     downvotes: {
-      type: Number,
-      default: 0,
+      type: [String],
+      default: [],
     },
-    votedUsers: [
-      {
-        email: {
-          type: String,
-        },
-        voteType: {
-          type: String,
-          enum: ['upvote', 'downvote'],
-        },
-      },
-    ],
   },
   {
     timestamps: true,

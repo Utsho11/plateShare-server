@@ -3,6 +3,8 @@ import { AuthRoutes } from '../modules/Auth/auth.route';
 import { UserRoutes } from '../modules/User/user.route';
 import { CategoryRoutes } from '../modules/Category/category.route';
 import { RecipeRoutes } from '../modules/Recipe/recipe.route';
+import { CommentRoutes } from '../modules/Comment/comment.route';
+import { RatingRoutes } from '../modules/Rating/rating.route';
 const router = express.Router();
 
 const moduleRoutes = [
@@ -21,6 +23,14 @@ const moduleRoutes = [
   {
     path: '/recipe',
     route: RecipeRoutes,
+  },
+  {
+    path: '/comment',
+    route: CommentRoutes,
+  },
+  {
+    path: '/rating',
+    route: RatingRoutes,
   },
 ];
 

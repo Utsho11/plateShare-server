@@ -40,3 +40,9 @@ router.delete(
   auth(USER_ROLE.ADMIN, USER_ROLE.USER, USER_ROLE.PREMIUM),
   RecipeControllers.deleteRecipe
 );
+
+router.put(
+  '/vote-recipe/:recipeId',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER, USER_ROLE.PREMIUM),
+  RecipeControllers.voteOnRecipe
+);
