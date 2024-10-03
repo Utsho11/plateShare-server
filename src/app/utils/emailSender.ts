@@ -24,7 +24,7 @@ const sendEmail = async (email: string, html: string, subject: string) => {
   });
 
   await transporter.sendMail({
-    from: '"FoundX" <fahimfiroz.ph@gmail.com>', // sender address
+    from: '"PlateShare" <utshoroy521@gmail.com>', // sender address
     to: email, // list of receivers
     subject, // Subject line.
     //text: "Hello world?", // plain text body

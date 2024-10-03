@@ -7,6 +7,7 @@ export type TLoginUser = {
 
 export type TRegisterUser = {
   name: string;
+  profilePhoto?: string[];
   email: string;
   mobileNumber: string;
   password: string;

@@ -43,7 +43,7 @@ const userSchema = new Schema<TUser, IUserModel>(
       required: true,
     },
     profilePhoto: {
-      type: String,
+      type: [String],
       default: null,
     },
     followers: {

@@ -3,9 +3,17 @@ import config from '../../../../../../../Assignment/PlateShare/plateShare-server
 import sendResponse from '../../utils/sendResponse';
 import { AuthServices } from './auth.service';
 import { catchAsync } from '../../utils/catchAsync';
+import AppError from '../../errors/AppError';
+import { TImageFiles } from '../../interfaces/image.interface';
 
 const registerUser = catchAsync(async (req, res) => {
-  const result = await AuthServices.registerUser(req.body);
+  if (!req.files) {
+    throw new AppError(400, 'Please upload an image');
+  }
+  const result = await AuthServices.registerUser(
+    req.body,
+    req.files as TImageFiles
+  );
   const { refreshToken, accessToken } = result;
 
   res.cookie('refreshToken', refreshToken, {
@@ -68,9 +76,38 @@ const refreshToken = catchAsync(async (req, res) => {
   });
 });
 
+const forgetPassword = catchAsync(async (req, res) => {
+  const userId = req.body.id;
+  const result = await AuthServices.forgetPassword(userId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Reset link is generated succesfully!',
+    data: result,
+  });
+});
+
+const resetPassword = catchAsync(async (req, res) => {
+  const token = req.headers.authorization;
+
+  if (!token) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Something went wrong !');
+  }
+
+  const result = await AuthServices.resetPassword(req.body, token);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Password reset succesfully!',
+    data: result,
+  });
+});
+
 export const AuthControllers = {
   registerUser,
   loginUser,
   changePassword,
   refreshToken,
+  forgetPassword,
+  resetPassword,
 };

@@ -36,8 +36,22 @@ const getSingleUser = catchAsync(async (req, res) => {
   });
 });
 
+const addFollowing = catchAsync(async (req, res) => {
+  const { _id } = req.user;
+
+  const { actionType, id } = req.body;
+  const result = await UserServices.addFollowingIntoDB(id, _id, actionType);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User Retrieved Successfully',
+    data: result,
+  });
+});
+
 export const UserControllers = {
   getSingleUser,
   userRegister,
   getAllUsers,
+  addFollowing,
 };
