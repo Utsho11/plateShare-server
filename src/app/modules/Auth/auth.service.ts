@@ -34,6 +34,7 @@ const registerUser = async (payload: TRegisterUser, images: TImageFiles) => {
     email: newUser.email,
     mobileNumber: newUser.mobileNumber,
     role: newUser.role,
+    profilePhoto: newUser.profilePhoto,
     status: newUser.status,
   };
 
@@ -83,6 +84,7 @@ const loginUser = async (payload: TLoginUser) => {
     email: user.email,
     mobileNumber: user.mobileNumber,
     role: user.role,
+    profilePhoto: user.profilePhoto,
     status: user.status,
   };
 
