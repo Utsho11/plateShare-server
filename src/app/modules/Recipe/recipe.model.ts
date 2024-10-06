@@ -28,12 +28,11 @@ const recipeSchema = new Schema<TRecipe>(
       trim: true,
     },
     ingredients: {
-      type: String,
+      type: [String],
       required: true,
     },
     premium: {
-      type: Boolean,
-      default: false,
+      type: String,
     },
     email: {
       type: String,

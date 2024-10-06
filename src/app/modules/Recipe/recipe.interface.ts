@@ -10,8 +10,8 @@ export type TRecipe = {
   category: string;
   cookingTime: string;
   description: string;
-  ingredients: string;
-  premium: boolean;
+  ingredients: string[];
+  premium: string;
   email: string;
   isDeleted?: boolean;
   upvotes?: string[];
