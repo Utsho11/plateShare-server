@@ -9,6 +9,10 @@ import { User } from '../User/user.model';
 import { TLoginUser, TRegisterUser } from './auth.interface';
 import { TImageFiles } from '../../interfaces/image.interface';
 import { EmailHelper } from '../../utils/emailSender';
+import { TCustomerDetails } from '../../interfaces/customer.interface';
+import { initiatePayment, verifyPayment } from '../../utils/payment';
+import { readFileSync } from 'fs'; // Make sure fs is imported
+import { join } from 'path';
 
 const registerUser = async (payload: TRegisterUser, images: TImageFiles) => {
   // checking if the user is exist
@@ -294,6 +298,43 @@ const resetPassword = async (
   );
 };
 
+const subscribeUserIntoDB = async (payload: TCustomerDetails) => {
+  const transactionId = `TXN-${Date.now()}`;
+
+  payload.tranId = transactionId;
+
+  const paymentSession = await initiatePayment(payload);
+
+  return paymentSession.payment_url;
+};
+
+const controllerService = async (transactionId: string, userId: string) => {
+  const verifyResponse = await verifyPayment(transactionId);
+
+  if (verifyResponse && verifyResponse?.pay_status === 'Successful') {
+    await User.findByIdAndUpdate(
+      userId,
+      {
+        role: 'PREMIUM',
+      },
+      { new: true }
+    );
+    const successfilePath = join(
+      __dirname,
+      '../../../views/confirmationTemplate.html'
+    );
+    const template = readFileSync(successfilePath, 'utf-8');
+    return template;
+  } else {
+    const failedFilePath = join(
+      __dirname,
+      '../../../views/failedTemplate.html'
+    );
+    const template = readFileSync(failedFilePath, 'utf-8');
+    return template;
+  }
+};
+
 export const AuthServices = {
   registerUser,
   loginUser,
@@ -301,4 +342,6 @@ export const AuthServices = {
   refreshToken,
   forgetPassword,
   resetPassword,
+  subscribeUserIntoDB,
+  controllerService,
 };

@@ -12,4 +12,5 @@ export type TRegisterUser = {
   mobileNumber: string;
   password: string;
   role: keyof typeof USER_ROLE;
+  tnxId?: string;
 };

@@ -54,4 +54,8 @@ router.post(
   AuthControllers.resetPassword
 );
 
+router.post('/subscribe', auth(USER_ROLE.USER), AuthControllers.subscribeUser);
+
+router.post('/confirmation', AuthControllers.confirmationController);
+
 export const AuthRoutes = router;

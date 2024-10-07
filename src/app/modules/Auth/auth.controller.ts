@@ -5,6 +5,7 @@ import { AuthServices } from './auth.service';
 import { catchAsync } from '../../utils/catchAsync';
 import AppError from '../../errors/AppError';
 import { TImageFiles } from '../../interfaces/image.interface';
+import { Request, Response } from 'express';
 
 const registerUser = catchAsync(async (req, res) => {
   if (!req.files) {
@@ -103,6 +104,32 @@ const resetPassword = catchAsync(async (req, res) => {
   });
 });
 
+const subscribeUser = catchAsync(async (req, res) => {
+  const userId = req.body;
+
+  const result = await AuthServices.subscribeUserIntoDB(userId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User has Subscribed successfully!',
+    data: result,
+  });
+});
+
+const confirmationController = async (req: Request, res: Response) => {
+  const { transactionId, userId } = req.query;
+  const result = await AuthServices.controllerService(
+    transactionId as string,
+    userId as string
+  );
+  res.send(result);
+};
+
+export const paymentController = {
+  confirmationController,
+};
+
 export const AuthControllers = {
   registerUser,
   loginUser,
@@ -110,4 +137,6 @@ export const AuthControllers = {
   refreshToken,
   forgetPassword,
   resetPassword,
+  subscribeUser,
+  confirmationController,
 };
