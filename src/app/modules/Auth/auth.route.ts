@@ -18,11 +18,7 @@ router.post(
   validateRequest(AuthValidation.registerValidationSchema),
   AuthControllers.registerUser
 );
-// router.post(
-//   '/register',
-//   validateRequest(AuthValidation.registerValidationSchema),
-//   AuthControllers.registerUser
-// );
+
 router.post(
   '/login',
   validateRequest(AuthValidation.loginValidationSchema),

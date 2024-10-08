@@ -1,19 +1,17 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-unused-vars */
+ 
+ 
 import { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
-import config from '../../../../../../Assignment/PlateShare/plateShare-server/src/app/config';
+import config from '../config';
 import AppError from '../errors/AppError';
 import handleCastError from '../errors/handleCastError';
+import handleDuplicateError from '../errors/handlerDuplicateError';
 import handleValidationError from '../errors/handleValidationError';
 import handleZodError from '../errors/handleZodError';
-import handleDuplicateError from '../errors/handlerDuplicateError';
 import { TErrorSources } from '../interfaces/error.interface';
-import { TImageFiles } from '../interfaces/image.interface';
-import { deleteImageFromCloudinary } from '../utils/deleteImage';
 
-const globalErrorHandler: ErrorRequestHandler = async (err, req, res, next) => {
-  //setting default values
+const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
+  // Setting default values
   let statusCode = 500;
   let message = 'Something went wrong!';
   let errorSources: TErrorSources = [
@@ -22,10 +20,6 @@ const globalErrorHandler: ErrorRequestHandler = async (err, req, res, next) => {
       message: 'Something went wrong',
     },
   ];
-
-  if (req.files && Object.keys(req.files).length > 0) {
-    await deleteImageFromCloudinary(req.files as TImageFiles);
-  }
 
   if (err instanceof ZodError) {
     const simplifiedError = handleZodError(err);
@@ -66,14 +60,16 @@ const globalErrorHandler: ErrorRequestHandler = async (err, req, res, next) => {
     ];
   }
 
-  //ultimate return
-  return res.status(statusCode).json({
+  // Send the error response
+  res.status(statusCode).json({
     success: false,
     message,
     errorSources,
-    err,
     stack: config.NODE_ENV === 'development' ? err?.stack : null,
   });
+
+  // Call next() to satisfy the ErrorRequestHandler type
+  return next();
 };
 
 export default globalErrorHandler;

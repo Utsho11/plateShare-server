@@ -12,7 +12,7 @@ export type TUser = {
   mobileNumber?: string;
   profilePhoto?: string[];
   followers?: string[];
-  following?: string[];
+  followings?: string[];
   createdAt?: Date;
   updatedAt?: Date;
 };

@@ -40,17 +40,17 @@ const addFollowingIntoDB = async (
 
   const updatedUser = userCollection.toObject();
   const updatedFollowerCollection = followerCollection.toObject();
-  updatedUser.following = updatedUser.following || [];
+  updatedUser.followings = updatedUser.followings || [];
   updatedFollowerCollection.followers =
     updatedFollowerCollection.followers || [];
 
   if (actionType === 'follow') {
-    updatedUser.following.push(fid);
+    updatedUser.followings.push(fid);
     updatedFollowerCollection?.followers.push(userId);
   }
 
   if (actionType === 'unfollow') {
-    updatedUser.following = updatedUser.following.filter(
+    updatedUser.followings = updatedUser.followings.filter(
       (voter: string) => voter !== fid
     );
     updatedFollowerCollection.followers =
@@ -61,7 +61,7 @@ const addFollowingIntoDB = async (
   try {
     await User.findByIdAndUpdate(
       userId,
-      { following: updatedUser.following },
+      { followings: updatedUser.followings },
       { new: true }
     );
     await User.findByIdAndUpdate(

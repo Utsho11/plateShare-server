@@ -1,5 +1,5 @@
 import httpStatus from 'http-status';
-import config from '../../../../../../../Assignment/PlateShare/plateShare-server/src/app/config';
+import config from '../../config';
 import sendResponse from '../../utils/sendResponse';
 import { AuthServices } from './auth.service';
 import { catchAsync } from '../../utils/catchAsync';

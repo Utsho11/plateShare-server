@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import config from '../../../../../../Assignment/PlateShare/plateShare-server/src/app/config';
+import config from '../config';
 import { USER_ROLE, USER_STATUS } from '../modules/User/user.constant';
 import { User } from '../modules/User/user.model';
 

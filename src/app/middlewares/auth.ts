@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { JwtPayload } from 'jsonwebtoken';
-import config from '../../../../../../Assignment/PlateShare/plateShare-server/src/app/config';
+import config from '../config';
 import AppError from '../errors/AppError';
 import { catchAsync } from '../utils/catchAsync';
 import { USER_ROLE } from '../modules/User/user.constant';

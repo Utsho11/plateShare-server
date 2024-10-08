@@ -3,9 +3,9 @@ import * as path from 'path';
 import { promisify } from 'util';
 import Handlebars from 'handlebars';
 import nodemailer from 'nodemailer';
-import config from '../../../../../../Assignment/PlateShare/plateShare-server/src/app/config';
 import AppError from '../errors/AppError';
 import httpStatus from 'http-status';
+import config from '../config';
 
 const ReadFile = promisify(fs.readFile);
 

@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-escape */
 import bcryptjs from 'bcryptjs';
 import { Schema, model } from 'mongoose';
-import config from '../../../../../../../Assignment/PlateShare/plateShare-server/src/app/config';
+import config from '../../config';
 import { USER_ROLE, USER_STATUS } from './user.constant';
 import { IUserModel, TUser } from './user.interface';
 
@@ -50,7 +50,7 @@ const userSchema = new Schema<TUser, IUserModel>(
       type: [String],
       default: [],
     },
-    following: {
+    followings: {
       type: [String],
       default: [],
     },

@@ -1,25 +1,34 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-unused-vars */
+
 import cors from 'cors';
 import express, { Application, NextFunction, Request, Response } from 'express';
+import path from 'path';
 import httpStatus from 'http-status';
-import globalErrorHandler from './app/middlewares/globalErrorHandler';
+import globalErrorHandler from './app/middlewares/globalErrorhandler';
 import routes from './app/routes';
 import cookieParser from 'cookie-parser';
-// import notFound from './app/middlewares/notFound';
+import notFound from './app/middlewares/notFound';
 
 const app: Application = express();
 
-app.use(cors());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(
+  cors({
+    credentials: true,
+    origin: 'http://localhost:3000',
+  })
+);
 app.use(cookieParser());
 
-//parser
+// Parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Routes
 app.use('/api', routes);
 
-//Testing
+// Welcome endpoint for testing
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
   res.status(httpStatus.OK).json({
     success: true,
@@ -27,10 +36,10 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-//global error handler
-app.use(globalErrorHandler);
+// Handle 404 errors (not found)
+app.use(notFound);
 
-//handle not found
-// app.use(notFound);
+// Global error handler
+app.use(globalErrorHandler);
 
 export default app;

@@ -2,8 +2,8 @@
 import { Server } from 'http';
 import mongoose from 'mongoose';
 import app from './app';
-import config from '../../../../Assignment/PlateShare/plateShare-server/src/app/config';
 import { seed } from './app/utils/seeding';
+import config from './app/config';
 
 let server: Server;
 

@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import httpStatus from 'http-status';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import config from '../../../../../../../Assignment/PlateShare/plateShare-server/src/app/config';
+import config from '../../config';
 import AppError from '../../errors/AppError';
 import { createToken } from '../../utils/verifyJWT';
 import { USER_ROLE } from '../User/user.constant';
@@ -41,7 +41,7 @@ const registerUser = async (payload: TRegisterUser, images: TImageFiles) => {
     profilePhoto: newUser.profilePhoto,
     status: newUser.status,
     followers: newUser.followers,
-    followings: newUser.following,
+    followings: newUser.followings,
   };
 
   const accessToken = createToken(
@@ -93,7 +93,7 @@ const loginUser = async (payload: TLoginUser) => {
     profilePhoto: user.profilePhoto,
     status: user.status,
     followers: user.followers,
-    followings: user.following,
+    followings: user.followings,
   };
 
   const accessToken = createToken(
@@ -321,15 +321,12 @@ const controllerService = async (transactionId: string, userId: string) => {
     );
     const successfilePath = join(
       __dirname,
-      '../../../views/confirmationTemplate.html'
+      '../../../../public/confirmation.html'
     );
     const template = readFileSync(successfilePath, 'utf-8');
     return template;
   } else {
-    const failedFilePath = join(
-      __dirname,
-      '../../../views/failedTemplate.html'
-    );
+    const failedFilePath = join(__dirname, '../../../../public/failed.html');
     const template = readFileSync(failedFilePath, 'utf-8');
     return template;
   }

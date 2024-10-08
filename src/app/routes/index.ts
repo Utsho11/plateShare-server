@@ -5,6 +5,7 @@ import { CategoryRoutes } from '../modules/Category/category.route';
 import { RecipeRoutes } from '../modules/Recipe/recipe.route';
 import { CommentRoutes } from '../modules/Comment/comment.route';
 import { RatingRoutes } from '../modules/Rating/rating.route';
+
 const router = express.Router();
 
 const moduleRoutes = [
