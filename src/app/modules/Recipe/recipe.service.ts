@@ -19,7 +19,10 @@ const createRecipeIntoDB = async (payload: TRecipe, images: TImageFiles) => {
 
 // Get all recipes from the database with query options (filter, sort, paginate, etc.)
 const getAllRecipesFromDB = async (query: Record<string, unknown>) => {
-  const items = new QueryBuilder(Recipe.find({ isDeleted: false }), query)
+  const items = new QueryBuilder(
+    Recipe.find({ isDeleted: false, recipeStatus: 'PUBLISH' }),
+    query
+  )
     .filter()
     .search(RecipeSearchableFields)
     .sort()

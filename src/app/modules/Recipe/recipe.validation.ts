@@ -19,7 +19,6 @@ const createRecipeValidationSchema = z.object({
         required_error: 'Ingredients are required',
       })
     ),
-    premium: z.string().optional(),
     email: z.string().email({
       message: 'Invalid email address',
     }),
@@ -34,7 +33,6 @@ const updateRecipeValidationSchema = z.object({
     cookingTime: z.string().optional(),
     description: z.string().optional(),
     ingredients: z.string().optional(),
-    premium: z.boolean().optional(),
     email: z
       .string()
       .email({
