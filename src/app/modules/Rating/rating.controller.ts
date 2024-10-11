@@ -4,8 +4,8 @@ import sendResponse from '../../utils/sendResponse';
 import { RatingServices } from './rating.service';
 
 const addRating = catchAsync(async (req, res) => {
-  const { rating } = req.body;
-  const { recipeId } = req.params;
+  const { rating, recipeId } = req.body;
+
   const { _id } = req.user;
   const result = await RatingServices.addRatingIntoDB(recipeId, _id, rating);
 
@@ -17,6 +17,20 @@ const addRating = catchAsync(async (req, res) => {
   });
 });
 
+const getRecipe = catchAsync(async (req, res) => {
+  const { recipeId } = req.params;
+
+  const result = await RatingServices.getRatingFromDB(recipeId as string);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Rating Retrieved Successfully',
+    data: result,
+  });
+});
+
 export const RatingController = {
   addRating,
+  getRecipe,
 };

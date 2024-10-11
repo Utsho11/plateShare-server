@@ -9,8 +9,9 @@ const router = express.Router();
 export const RatingRoutes = router;
 
 router.post(
-  '/:recipeId',
+  '/add-rating',
   auth(USER_ROLE.ADMIN, USER_ROLE.USER, USER_ROLE.PREMIUM),
   validateRequest(createRatingValidationSchema),
   RatingController.addRating
 );
+router.get('/get-rating/:recipeId', RatingController.getRecipe);

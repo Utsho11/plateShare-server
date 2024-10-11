@@ -42,7 +42,7 @@ router.delete(
 );
 
 router.put(
-  '/vote-recipe/:recipeId',
+  '/vote-recipe/',
   auth(USER_ROLE.ADMIN, USER_ROLE.USER, USER_ROLE.PREMIUM),
   RecipeControllers.voteOnRecipe
 );

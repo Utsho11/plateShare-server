@@ -1,4 +1,5 @@
 import { Recipe } from '../Recipe/recipe.model';
+import { TRating } from './rating.interface';
 import { Rating } from './rating.model';
 
 const addRatingIntoDB = async (
@@ -36,6 +37,24 @@ const addRatingIntoDB = async (
   return newRating;
 };
 
+const getRatingFromDB = async (recipeId: string) => {
+  const recipeRatingDB: TRating[] | null = await Rating.find({ recipeId });
+  if (!recipeRatingDB) {
+    return null;
+  }
+
+  const totalRatings: number = recipeRatingDB.reduce(
+    (acc, item) => acc + item.rating,
+    0
+  );
+
+  // Calculate the average
+  const averageRating: number = totalRatings / recipeRatingDB.length;
+
+  return averageRating;
+};
+
 export const RatingServices = {
   addRatingIntoDB,
+  getRatingFromDB,
 };

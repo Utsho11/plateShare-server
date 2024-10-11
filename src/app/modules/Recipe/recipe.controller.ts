@@ -71,8 +71,7 @@ const deleteRecipe = catchAsync(async (req, res) => {
 });
 
 const voteOnRecipe = catchAsync(async (req, res) => {
-  const { recipeId } = req.params;
-  const { voteType } = req.query;
+  const { recipeId, voteType } = req.body;
 
   const email = req.user?.email;
 
