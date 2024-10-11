@@ -11,6 +11,12 @@ const createRecipeValidationSchema = z.object({
     cookingTime: z.string({
       required_error: 'Cooking time is required',
     }),
+    recipeType: z.string({
+      required_error: 'Recipe Type is required',
+    }),
+    recipeStatus: z.string({
+      required_error: 'Recipe Status is required',
+    }),
     description: z.string({
       required_error: 'Description is required',
     }),

@@ -32,10 +32,12 @@ const recipeSchema = new Schema<TRecipe>(
       required: true,
     },
     recipeType: {
-      enum: ['FREE', 'PREMIUM'],
+      type: String,
+      required: true,
     },
     recipeStatus: {
-      enum: ['PUBLISHED', 'BLOCKED'],
+      type: String,
+      required: true,
     },
     email: {
       type: String,

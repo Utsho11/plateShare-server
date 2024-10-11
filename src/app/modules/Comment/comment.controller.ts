@@ -16,17 +16,9 @@ const createComment = catchAsync(async (req, res) => {
 });
 
 const editComment = catchAsync(async (req, res) => {
-  const token = req.headers.authorization;
+  const { comment, commentId } = req.body;
 
-  const { userId, comment } = req.body;
-
-  const { commentId } = req.params;
-  const result = await CommentService.editComment(
-    commentId,
-    userId,
-    comment,
-    token as string
-  );
+  const result = await CommentService.editComment(comment, commentId);
 
   sendResponse(res, {
     success: true,

@@ -19,7 +19,7 @@ router.post(
 router.get('/:recipeId', CommentController.getCommentsForRecipe);
 
 router.put(
-  '/edit-comment/:commentId',
+  '/edit-comment',
   auth(USER_ROLE.ADMIN, USER_ROLE.USER, USER_ROLE.PREMIUM),
   validateRequest(CommentValidation.updateCommentValidationSchema),
   CommentController.editComment

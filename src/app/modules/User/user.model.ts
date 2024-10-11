@@ -42,6 +42,14 @@ const userSchema = new Schema<TUser, IUserModel>(
       type: String,
       required: true,
     },
+    age: {
+      type: String,
+      required: true,
+    },
+    location: {
+      type: String,
+      required: true,
+    },
     profilePhoto: {
       type: [String],
       default: null,

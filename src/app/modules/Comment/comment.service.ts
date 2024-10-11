@@ -16,30 +16,7 @@ const addComment = async (
 };
 
 // Edit comment
-const editComment = async (
-  commentId: string,
-  userId: string,
-  newComment: string,
-  token: string
-) => {
-  if (!token) {
-    throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
-  }
-
-  const decoded = verifyToken(
-    token,
-    config.jwt_access_secret as string
-  ) as JwtPayload;
-
-  const { _id } = decoded;
-
-  if (userId !== _id) {
-    throw new AppError(
-      httpStatus.UNAUTHORIZED,
-      'You are not authorized to edit this comment!'
-    );
-  }
-
+const editComment = async (newComment: string, commentId: string) => {
   const comment = await Comment.findOneAndUpdate(
     { _id: commentId },
     { comment: newComment, updatedAt: Date.now() },
@@ -72,7 +49,9 @@ const deleteComment = async (commentId: string, token: string) => {
 
 // Get all comments for a recipe
 const getCommentsForRecipe = async (recipeId: string) => {
-  return await Comment.find({ recipeId }).sort({ createdAt: -1 }); // Sort by createdAt in ascending order (oldest first)
+  return await Comment.find({ recipeId })
+    .sort({ createdAt: -1 })
+    .populate('userId'); // Sort by createdAt in ascending order (oldest first)
 };
 
 export const CommentService = {

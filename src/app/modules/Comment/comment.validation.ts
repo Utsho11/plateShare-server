@@ -18,7 +18,7 @@ const createCommentValidationSchema = z.object({
 
 const updateCommentValidationSchema = z.object({
   body: z.object({
-    userId: z.string({
+    commentId: z.string({
       required_error: 'User ID is required',
     }),
     comment: z.string().min(1, 'Comment cannot be empty').optional(), // The comment field is optional in updates

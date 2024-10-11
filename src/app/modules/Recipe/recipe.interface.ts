@@ -10,8 +10,8 @@ export type TRecipe = {
   cookingTime: string;
   description: string;
   email: string;
-  recipeType: 'FREE' | 'PREMIUM';
-  recipeStatus: 'PUBLISH' | 'BLOCK';
+  recipeType: string;
+  recipeStatus: string;
   ingredients: string[];
   images?: string[];
   isDeleted?: boolean;
