@@ -1,13 +1,8 @@
+import httpStatus from 'http-status';
 import { QueryBuilder } from '../../builder/QueryBuilder';
+import AppError from '../../errors/AppError';
 import { UserSearchableFields } from './user.constant';
-import { TUser } from './user.interface';
 import { User } from './user.model';
-
-const createUser = async (payload: TUser) => {
-  const user = await User.create(payload);
-
-  return user;
-};
 
 const getAllUsersFromDB = async (query: Record<string, unknown>) => {
   const users = new QueryBuilder(User.find(), query)
@@ -82,9 +77,43 @@ const getSingleUserFromDB = async (id: string) => {
   return user;
 };
 
+const updateUserStatusIntoDB = async (userId: string, status: string) => {
+  const isUserExists = await User.findOne({
+    _id: userId,
+  });
+
+  if (!isUserExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found!');
+  }
+
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { status },
+    {
+      new: true,
+    }
+  );
+  return user;
+};
+
+const deleteUserFromDB = async (id: string) => {
+  const isUserExists = await User.findOne({
+    _id: id,
+  });
+
+  if (!isUserExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found!');
+  }
+
+  const user = await User.findByIdAndDelete(id);
+
+  return user;
+};
+
 export const UserServices = {
-  createUser,
   getAllUsersFromDB,
   getSingleUserFromDB,
   addFollowingIntoDB,
+  updateUserStatusIntoDB,
+  deleteUserFromDB,
 };

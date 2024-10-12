@@ -19,10 +19,7 @@ const createRecipeIntoDB = async (payload: TRecipe, images: TImageFiles) => {
 
 // Get all recipes from the database with query options (filter, sort, paginate, etc.)
 const getAllRecipesFromDB = async (query: Record<string, unknown>) => {
-  const items = new QueryBuilder(
-    Recipe.find({ isDeleted: false, recipeStatus: 'PUBLISH' }),
-    query
-  )
+  const items = new QueryBuilder(Recipe.find({ isDeleted: false }), query)
     .filter()
     .search(RecipeSearchableFields)
     .sort()
@@ -123,6 +120,29 @@ const updateRecipeIntoDB = async (id: string, updateData: Partial<TRecipe>) => {
   return recipe;
 };
 
+const updateRecipeStatusIntoDB = async (
+  recipeId: string,
+  recipeStatus: string
+) => {
+  const isRecipeExists = await Recipe.findOne({
+    _id: recipeId,
+    isDeleted: false,
+  });
+
+  if (!isRecipeExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Recipe not found!');
+  }
+
+  const recipe = await Recipe.findByIdAndUpdate(
+    recipeId,
+    { recipeStatus },
+    {
+      new: true,
+    }
+  );
+  return recipe;
+};
+
 // Soft delete a recipe by marking it as deleted
 const deleteRecipeFromDB = async (id: string) => {
   const isRecipeExists = await Recipe.findOne({
@@ -149,4 +169,5 @@ export const RecipeServices = {
   updateRecipeIntoDB,
   deleteRecipeFromDB,
   voteOnRecipe,
+  updateRecipeStatusIntoDB,
 };

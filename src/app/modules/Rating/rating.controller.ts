@@ -18,9 +18,7 @@ const addRating = catchAsync(async (req, res) => {
 });
 
 const getRecipe = catchAsync(async (req, res) => {
-  const { recipeId } = req.params;
-
-  const result = await RatingServices.getRatingFromDB(recipeId as string);
+  const result = await RatingServices.getRatingFromDB();
 
   sendResponse(res, {
     success: true,

@@ -1,3 +1,4 @@
+import { TRecipe } from '../Recipe/recipe.interface';
 import { Recipe } from '../Recipe/recipe.model';
 import { TRating } from './rating.interface';
 import { Rating } from './rating.model';
@@ -37,21 +38,44 @@ const addRatingIntoDB = async (
   return newRating;
 };
 
-const getRatingFromDB = async (recipeId: string) => {
-  const recipeRatingDB: TRating[] | null = await Rating.find({ recipeId });
-  if (!recipeRatingDB) {
+const getRatingFromDB = async () => {
+  // Fetch all recipes and ratings from the database
+  const recipeRatingDB: TRating[] = await Rating.find(); // Get all ratings
+  const recipeDB: TRecipe[] = await Recipe.find(); // Get all recipes
+
+  if (!recipeRatingDB || !recipeDB) {
     return null;
   }
 
-  const totalRatings: number = recipeRatingDB.reduce(
-    (acc, item) => acc + item.rating,
-    0
-  );
+  // Iterate through each recipe to calculate its average rating
+  const averageRatings = recipeDB.map((recipe) => {
+    // Filter ratings that belong to the current recipe
+    const recipeRatings = recipeRatingDB.filter(
+      (rating) =>
+        rating.recipeId && rating.recipeId.toString() === recipe._id.toString()
+    );
 
-  // Calculate the average
-  const averageRating: number = totalRatings / recipeRatingDB.length;
+    // If the recipe has ratings, calculate the average
+    const totalRatings = recipeRatings.reduce(
+      (acc, item) => acc + item.rating,
+      0
+    );
 
-  return averageRating;
+    const averageRating =
+      recipeRatings.length > 0 ? totalRatings / recipeRatings.length : 0;
+
+    // Return the recipe with its average rating
+    return {
+      recipeId: recipe._id,
+      recipeName: recipe.name,
+      averageRating: averageRating,
+      totalRatings: recipeRatings.length, // Optionally include the count of ratings
+    };
+  });
+
+  console.log(averageRatings);
+
+  return averageRatings; // This will be an array of recipes with their average ratings
 };
 
 export const RatingServices = {

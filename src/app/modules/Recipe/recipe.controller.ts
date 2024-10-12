@@ -93,6 +93,21 @@ const voteOnRecipe = catchAsync(async (req, res) => {
   });
 });
 
+const updateRecipeStatus = catchAsync(async (req, res) => {
+  const { recipeId, recipeStatus } = req.body;
+  const updatedItem = await RecipeServices.updateRecipeStatusIntoDB(
+    recipeId,
+    recipeStatus
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Recipe updated successfully',
+    data: updatedItem,
+  });
+});
+
 export const RecipeControllers = {
   createRecipe,
   getAllRecipe,
@@ -100,4 +115,5 @@ export const RecipeControllers = {
   updateRecipe,
   getSingleRecipe,
   voteOnRecipe,
+  updateRecipeStatus,
 };

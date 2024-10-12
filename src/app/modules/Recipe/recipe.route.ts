@@ -34,10 +34,15 @@ router.put(
   validateRequest(RecipeValidation.updateRecipeValidationSchema),
   RecipeControllers.updateRecipe
 );
+router.put(
+  '/update-recipe-status',
+  auth(USER_ROLE.ADMIN),
+  RecipeControllers.updateRecipeStatus
+);
 
 router.delete(
   '/delete-recipe/:id',
-  auth(USER_ROLE.ADMIN, USER_ROLE.USER, USER_ROLE.PREMIUM),
+  auth(USER_ROLE.ADMIN),
   RecipeControllers.deleteRecipe
 );
 

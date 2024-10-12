@@ -14,4 +14,4 @@ router.post(
   validateRequest(createRatingValidationSchema),
   RatingController.addRating
 );
-router.get('/get-rating/:recipeId', RatingController.getRecipe);
+router.get('/get-rating', RatingController.getRecipe);

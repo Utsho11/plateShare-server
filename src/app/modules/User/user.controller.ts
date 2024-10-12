@@ -3,17 +3,6 @@ import { catchAsync } from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { UserServices } from './user.service';
 
-const userRegister = catchAsync(async (req, res) => {
-  const user = await UserServices.createUser(req.body);
-
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: 'User Created Successfully',
-    data: user,
-  });
-});
-
 const getAllUsers = catchAsync(async (req, res) => {
   const users = await UserServices.getAllUsersFromDB(req.query);
 
@@ -48,9 +37,34 @@ const addFollowing = catchAsync(async (req, res) => {
   });
 });
 
+const updateUserStatus = catchAsync(async (req, res) => {
+  const { userId, status } = req.body;
+  const updatedItem = await UserServices.updateUserStatusIntoDB(userId, status);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Recipe updated successfully',
+    data: updatedItem,
+  });
+});
+
+const deleteUser = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  await UserServices.deleteUserFromDB(id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Recipe deleted successfully',
+    data: null,
+  });
+});
+
 export const UserControllers = {
   getSingleUser,
-  userRegister,
   getAllUsers,
   addFollowing,
+  updateUserStatus,
+  deleteUser,
 };
