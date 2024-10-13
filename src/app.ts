@@ -15,8 +15,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(
   cors({
+    origin: 'https://plate-share.vercel.app/',
     credentials: true,
-    origin: 'http://localhost:3000/',
   })
 );
 app.use(cookieParser());

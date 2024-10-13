@@ -61,6 +61,7 @@ const registerUser = async (payload: TRegisterUser, images: TImageFiles) => {
     refreshToken,
   };
 };
+
 const loginUser = async (payload: TLoginUser) => {
   // checking if the user is exist
   const user = await User.isUserExistsByEmail(payload?.email);
@@ -92,6 +93,8 @@ const loginUser = async (payload: TLoginUser) => {
     role: user.role,
     profilePhoto: user.profilePhoto,
     status: user.status,
+    age: user.age,
+    location: user.location,
     followers: user.followers,
     followings: user.followings,
   };
@@ -249,6 +252,10 @@ const forgetPassword = async (userId: string) => {
   // console.log(resetUILink);
 };
 
+const sendEmailToAdmin = (email: string, message: string, subject: string) => {
+  EmailHelper.sendEmailAdmin(email, message, subject);
+};
+
 const resetPassword = async (
   payload: { id: string; newPassword: string },
   token: string
@@ -341,4 +348,5 @@ export const AuthServices = {
   resetPassword,
   subscribeUserIntoDB,
   controllerService,
+  sendEmailToAdmin,
 };

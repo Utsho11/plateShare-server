@@ -9,12 +9,10 @@ const userSchema = new Schema<TUser, IUserModel>(
   {
     name: {
       type: String,
-      required: true,
     },
     role: {
       type: String,
       enum: Object.keys(USER_ROLE),
-      required: true,
     },
     email: {
       type: String,
@@ -27,7 +25,6 @@ const userSchema = new Schema<TUser, IUserModel>(
     },
     password: {
       type: String,
-      required: true,
       select: 0,
     },
     status: {
@@ -40,15 +37,12 @@ const userSchema = new Schema<TUser, IUserModel>(
     },
     mobileNumber: {
       type: String,
-      required: true,
     },
     age: {
       type: String,
-      required: true,
     },
     location: {
       type: String,
-      required: true,
     },
     profilePhoto: {
       type: [String],

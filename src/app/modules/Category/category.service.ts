@@ -11,7 +11,7 @@ const createCategoryIntoDB = async (payload: TCategory) => {
 };
 
 const getAllCategoryFromDB = async (query: Record<string, unknown>) => {
-  const items = new QueryBuilder(Category.find({ isDeleted: false }), query)
+  const items = new QueryBuilder(Category.find(), query)
     .filter()
     .sort()
     .paginate()
@@ -40,19 +40,12 @@ const updateCategoryIntoDB = async (
 };
 
 const deleteCategoryFromDB = async (id: string) => {
-  const isCategoryExists = await Category.findOne({
-    _id: id,
-    isDeleted: false,
-  });
+  const isCategoryExists = await Category.findById(id);
   if (!isCategoryExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'Category not found!');
   }
 
-  const category = await Category.findByIdAndUpdate(
-    id,
-    { isDeleted: true },
-    { new: true }
-  );
+  const category = await Category.findByIdAndDelete(id);
   return category;
 };
 

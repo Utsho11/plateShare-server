@@ -54,4 +54,6 @@ router.post('/subscribe', auth(USER_ROLE.USER), AuthControllers.subscribeUser);
 
 router.post('/confirmation', AuthControllers.confirmationController);
 
+router.post('/send-mail', AuthControllers.sendEmail);
+
 export const AuthRoutes = router;

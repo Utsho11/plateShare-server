@@ -2,6 +2,8 @@ import httpStatus from 'http-status';
 import { catchAsync } from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { UserServices } from './user.service';
+import AppError from '../../errors/AppError';
+import { TImageFiles } from '../../interfaces/image.interface';
 
 const getAllUsers = catchAsync(async (req, res) => {
   const users = await UserServices.getAllUsersFromDB(req.query);
@@ -61,10 +63,29 @@ const deleteUser = catchAsync(async (req, res) => {
   });
 });
 
+const updateUser = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  if (!req.files) {
+    throw new AppError(400, 'Please upload an image');
+  }
+  const result = await UserServices.updateUserIntoDB(
+    id,
+    req.body,
+    req.files as TImageFiles
+  );
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User updated successfully',
+    data: result,
+  });
+});
+
 export const UserControllers = {
   getSingleUser,
   getAllUsers,
   addFollowing,
   updateUserStatus,
   deleteUser,
+  updateUser,
 };

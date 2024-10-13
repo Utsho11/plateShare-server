@@ -73,7 +73,6 @@ const getRatingFromDB = async () => {
     };
   });
 
-  console.log(averageRatings);
 
   return averageRatings; // This will be an array of recipes with their average ratings
 };

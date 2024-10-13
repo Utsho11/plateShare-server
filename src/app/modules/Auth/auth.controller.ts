@@ -65,6 +65,18 @@ const changePassword = catchAsync(async (req, res) => {
   });
 });
 
+const sendEmail = catchAsync(async (req, res) => {
+  const { email, message, subject } = req.body;
+
+  const result = await AuthServices.sendEmailToAdmin(email, message, subject);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Password updated successfully!',
+    data: result,
+  });
+});
+
 const refreshToken = catchAsync(async (req, res) => {
   const { refreshToken } = req.cookies;
   const result = await AuthServices.refreshToken(refreshToken);
@@ -139,4 +151,5 @@ export const AuthControllers = {
   resetPassword,
   subscribeUser,
   confirmationController,
+  sendEmail,
 };

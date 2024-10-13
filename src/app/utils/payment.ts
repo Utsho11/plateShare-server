@@ -13,7 +13,7 @@ export const initiatePayment = async (paymentData: TCustomerDetails) => {
       tran_id: paymentData.tranId,
       success_url: `https://plate-share-server.vercel.app/api/auth/confirmation?transactionId=${paymentData.tranId}&userId=${paymentData.userId}`,
       fail_url: `https://plate-share-server.vercel.app/api/auth/confirmation?status=failed`,
-      cancel_url: 'http://localhost:3000/',
+      cancel_url: 'https://plate-share.vercel.app/',
       amount: paymentData.amount,
       currency: 'BDT',
       desc: 'Merchant Registration Payment',
