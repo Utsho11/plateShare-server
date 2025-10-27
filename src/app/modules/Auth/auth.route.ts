@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.post(
   '/register',
-  multerUpload.fields([{ name: 'profilePhoto' }]),
+  multerUpload.single('file'),
   parseBody,
   validateRequest(AuthValidation.registerValidationSchema),
   AuthControllers.registerUser

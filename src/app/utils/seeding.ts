@@ -1,6 +1,10 @@
 /* eslint-disable no-console */
 import config from '../config';
-import { USER_ROLE, USER_STATUS } from '../modules/User/user.constant';
+import {
+  USER_ROLE,
+  USER_STATUS,
+  USER_TYPE,
+} from '../modules/User/user.constant';
 import { User } from '../modules/User/user.model';
 
 export const seed = async () => {
@@ -22,6 +26,7 @@ export const seed = async () => {
         profilePhoto: config.admin_profile_photo,
         mobileNumber: config.admin_mobile_number,
         status: USER_STATUS.ACTIVE,
+        type: USER_TYPE.PREMIUM,
       });
       console.log('Admin created successfully...');
       console.log('Seeding completed...');

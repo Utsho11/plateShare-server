@@ -3,55 +3,52 @@ import httpStatus from 'http-status';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
 import AppError from '../../errors/AppError';
-import { createToken } from '../../utils/verifyJWT';
-import { USER_ROLE } from '../User/user.constant';
+import { createToken, type TJwtPayload } from '../../utils/verifyJWT';
 import { User } from '../User/user.model';
-import { TLoginUser, TRegisterUser } from './auth.interface';
-import { TImageFiles } from '../../interfaces/image.interface';
+import { TLoginUser } from './auth.interface';
 import { EmailHelper } from '../../utils/emailSender';
 import { TCustomerDetails } from '../../interfaces/customer.interface';
 import { initiatePayment, verifyPayment } from '../../utils/payment';
 import { readFileSync } from 'fs'; // Make sure fs is imported
 import { join } from 'path';
+import type { Request } from 'express';
 
-const registerUser = async (payload: TRegisterUser, images: TImageFiles) => {
+const registerUser = async (req: Request) => {
+  const payload = req.body;
+  const file = req.file;
+
   // checking if the user is exist
   const user = await User.isUserExistsByEmail(payload?.email);
 
-  const { profilePhoto } = images;
-
   if (user) {
-    throw new AppError(httpStatus.NOT_FOUND, 'This user is already exist!');
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'This user is already exist with this email!'
+    );
   }
 
-  payload.role = USER_ROLE.USER;
-  payload.profilePhoto = profilePhoto.map((image) => image.path);
+  payload['profilePhoto'] = file?.path;
 
   //create new user
   const newUser = await User.create(payload);
 
-  //create token and sent to the  client
+  // create token and sent to the  client
 
   const jwtPayload = {
     _id: newUser._id,
-    name: newUser.name,
+    name: newUser.firstName + ' ' + newUser.lastName,
     email: newUser.email,
-    mobileNumber: newUser.mobileNumber,
     role: newUser.role,
-    profilePhoto: newUser.profilePhoto,
-    status: newUser.status,
-    followers: newUser.followers,
-    followings: newUser.followings,
   };
 
   const accessToken = createToken(
-    jwtPayload,
+    jwtPayload as TJwtPayload,
     config.jwt_access_secret as string,
     config.jwt_access_expires_in as string
   );
 
   const refreshToken = createToken(
-    jwtPayload,
+    jwtPayload as TJwtPayload,
     config.jwt_refresh_secret as string,
     config.jwt_refresh_expires_in as string
   );
@@ -60,6 +57,7 @@ const registerUser = async (payload: TRegisterUser, images: TImageFiles) => {
     accessToken,
     refreshToken,
   };
+  // return payload;
 };
 
 const loginUser = async (payload: TLoginUser) => {

@@ -1,17 +1,28 @@
 import { z } from 'zod';
+import { USER_ROLE, USER_STATUS, USER_TYPE } from '../User/user.constant';
 
 const registerValidationSchema = z.object({
   body: z.object({
-    name: z.string({
-      required_error: 'Name is required',
+    firstName: z.string({
+      required_error: 'First name is required',
     }),
-    email: z.string({
-      required_error: 'Email is required',
+    lastName: z.string({
+      required_error: 'Last name is required',
     }),
-    password: z.string({ required_error: 'Password is required' }),
-    age: z.string({ required_error: 'Age is required' }),
-    location: z.string({ required_error: 'Location is required' }),
-    mobileNumber: z.string({ required_error: 'Mobile number is required' }),
+    role: z.nativeEnum(USER_ROLE).optional(),
+    email: z
+      .string({
+        required_error: 'Email is required',
+      })
+      .email({
+        message: 'Invalid email',
+      }),
+    password: z.string({
+      required_error: 'Password is required',
+    }),
+    status: z.nativeEnum(USER_STATUS).optional(),
+    type: z.nativeEnum(USER_TYPE).optional(),
+    mobileNumber: z.string().optional(),
   }),
 });
 

@@ -2,12 +2,15 @@
 import bcryptjs from 'bcryptjs';
 import { Schema, model } from 'mongoose';
 import config from '../../config';
-import { USER_ROLE, USER_STATUS } from './user.constant';
+import { USER_ROLE, USER_STATUS, USER_TYPE } from './user.constant';
 import { IUserModel, TUser } from './user.interface';
 
 const userSchema = new Schema<TUser, IUserModel>(
   {
-    name: {
+    firstName: {
+      type: String,
+    },
+    lastName: {
       type: String,
     },
     role: {
@@ -32,6 +35,11 @@ const userSchema = new Schema<TUser, IUserModel>(
       enum: Object.keys(USER_STATUS),
       default: USER_STATUS.ACTIVE,
     },
+    type: {
+      type: String,
+      enum: Object.keys(USER_TYPE),
+      default: USER_TYPE.REGULAR,
+    },
     passwordChangedAt: {
       type: Date,
     },
@@ -39,22 +47,15 @@ const userSchema = new Schema<TUser, IUserModel>(
       type: String,
     },
     age: {
-      type: String,
+      type: Number,
     },
     location: {
       type: String,
     },
     profilePhoto: {
-      type: [String],
+      type: String,
       default: null,
-    },
-    followers: {
-      type: [String],
-      default: [],
-    },
-    followings: {
-      type: [String],
-      default: [],
+      optional: true,
     },
   },
   {

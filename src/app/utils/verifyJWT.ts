@@ -2,6 +2,7 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import AppError from '../errors/AppError';
 import { USER_ROLE, USER_STATUS } from '../modules/User/user.constant';
+import type { Types } from 'mongoose';
 
 // _id: user._id,
 //     name: user.name,
@@ -10,15 +11,17 @@ import { USER_ROLE, USER_STATUS } from '../modules/User/user.constant';
 //     role: user.role,
 //     status: user.status,
 
+export type TJwtPayload = {
+  _id: Types.ObjectId;
+  name: string;
+  email: string;
+  mobileNumber?: string | undefined;
+  role: 'ADMIN' | 'USER';
+  status: 'ACTIVE' | 'BLOCKED';
+};
+
 export const createToken = (
-  jwtPayload: {
-    _id?: string;
-    name: string;
-    email: string;
-    mobileNumber?: string;
-    role: keyof typeof USER_ROLE;
-    status: keyof typeof USER_STATUS;
-  },
+  jwtPayload: TJwtPayload,
   secret: string,
   expiresIn: string
 ) => {

@@ -21,7 +21,7 @@
     "cloudinary": "^1.41.3",
     "cookie-parser": "^1.0.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
+    "dotenv": "^17.2.3",
     "express": "^4.21.0",
     "handlebars": "^4.7.8",
     "http-status": "^1.7.4",

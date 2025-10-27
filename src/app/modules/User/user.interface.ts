@@ -1,20 +1,19 @@
 import { Model } from 'mongoose';
-import { USER_ROLE, USER_STATUS } from './user.constant';
+import { USER_ROLE, USER_STATUS, type USER_TYPE } from './user.constant';
 
 export type TUser = {
-  _id?: string;
-  name: string;
-  role: keyof typeof USER_ROLE;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
-  status: keyof typeof USER_STATUS;
-  age?: string;
+  age?: number;
   location?: string;
-  passwordChangedAt?: Date;
   mobileNumber?: string;
-  profilePhoto?: string[];
-  followers?: string[];
-  followings?: string[];
+  profilePhoto?: string;
+  status: keyof typeof USER_STATUS;
+  role: keyof typeof USER_ROLE;
+  type: keyof typeof USER_TYPE;
+  passwordChangedAt?: Date;
   createdAt?: Date;
   updatedAt?: Date;
 };
@@ -30,3 +29,13 @@ export interface IUserModel extends Model<TUser> {
     jwtIssuedTimestamp: number
   ): boolean;
 }
+
+/*
+"firstName":"Utsho",
+"lastName":"Roy",
+"email":"utshoroy521@gmail.com",
+"password":"123456",
+"age":25,
+"location":"Dhaka",
+"mobileNumber":"01521793531"
+*/

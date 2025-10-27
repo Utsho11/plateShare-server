@@ -4,17 +4,10 @@ import sendResponse from '../../utils/sendResponse';
 import { AuthServices } from './auth.service';
 import { catchAsync } from '../../utils/catchAsync';
 import AppError from '../../errors/AppError';
-import { TImageFiles } from '../../interfaces/image.interface';
 import { Request, Response } from 'express';
 
 const registerUser = catchAsync(async (req, res) => {
-  if (!req.files) {
-    throw new AppError(400, 'Please upload an image');
-  }
-  const result = await AuthServices.registerUser(
-    req.body,
-    req.files as TImageFiles
-  );
+  const result = await AuthServices.registerUser(req);
   const { refreshToken, accessToken } = result;
 
   res.cookie('refreshToken', refreshToken, {

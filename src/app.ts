@@ -13,12 +13,7 @@ const app: Application = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(
-  cors({
-    origin: 'https://plate-share.vercel.app/',
-    credentials: true,
-  })
-);
+app.use(cors());
 app.use(cookieParser());
 
 // Parser middleware
@@ -26,7 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use('/api', routes);
+app.use('/api/v1', routes);
 
 // Welcome endpoint for testing
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
