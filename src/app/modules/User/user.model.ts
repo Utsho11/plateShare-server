@@ -16,6 +16,7 @@ const userSchema = new Schema<TUser, IUserModel>(
     role: {
       type: String,
       enum: Object.keys(USER_ROLE),
+      default: USER_ROLE.USER,
     },
     email: {
       type: String,

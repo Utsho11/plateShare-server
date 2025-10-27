@@ -83,8 +83,8 @@ const refreshToken = catchAsync(async (req, res) => {
 });
 
 const forgetPassword = catchAsync(async (req, res) => {
-  const userId = req.body.id;
-  const result = await AuthServices.forgetPassword(userId);
+  const email = req.body.email;
+  const result = await AuthServices.forgetPassword(email);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -99,6 +99,8 @@ const resetPassword = catchAsync(async (req, res) => {
   if (!token) {
     throw new AppError(httpStatus.BAD_REQUEST, 'Something went wrong !');
   }
+
+  //http://localhost:3000/reset-password?id=68ffc3b1acb5a8ac6e2e37f1&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZmZjM2IxYWNiNWE4YWM2ZTJlMzdmMSIsIm5hbWUiOiJVdHNobyBSb3kiLCJlbWFpbCI6InV0c2hvcm95NTIyQGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzYxNTkzNDQ1LCJleHAiOjE3NjE1OTM3NDV9.aXhyXRu7Y2uwmC-xGuum_Vcq9rpkEi3Q8eyTshs06RQ
 
   const result = await AuthServices.resetPassword(req.body, token);
   sendResponse(res, {

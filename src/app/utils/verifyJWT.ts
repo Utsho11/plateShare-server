@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import AppError from '../errors/AppError';
-import { USER_ROLE, USER_STATUS } from '../modules/User/user.constant';
 import type { Types } from 'mongoose';
 
 // _id: user._id,
@@ -12,7 +11,7 @@ import type { Types } from 'mongoose';
 //     status: user.status,
 
 export type TJwtPayload = {
-  _id: Types.ObjectId;
+  id: Types.ObjectId;
   name: string;
   email: string;
   mobileNumber?: string | undefined;
@@ -38,6 +37,8 @@ export const verifyToken = (
     return jwt.verify(token, secret) as JwtPayload;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error: any) {
+    console.log(error);
+
     throw new AppError(401, 'You are not authorized!');
   }
 };

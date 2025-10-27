@@ -13,7 +13,7 @@ router.get('/', UserControllers.getAllUsers);
 router.get('/:id', UserControllers.getSingleUser);
 router.patch(
   '/add-following',
-  auth(USER_ROLE.ADMIN, USER_ROLE.USER, USER_ROLE.PREMIUM),
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
   UserControllers.addFollowing
 );
 

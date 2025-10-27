@@ -35,7 +35,7 @@ const registerUser = async (req: Request) => {
   // create token and sent to the  client
 
   const jwtPayload = {
-    _id: newUser._id,
+    id: newUser._id,
     name: newUser.firstName + ' ' + newUser.lastName,
     email: newUser.email,
     role: newUser.role,
@@ -84,27 +84,20 @@ const loginUser = async (payload: TLoginUser) => {
   //create token and sent to the  client
 
   const jwtPayload = {
-    _id: user._id,
-    name: user.name,
+    id: user._id,
+    name: user.firstName + ' ' + user.lastName,
     email: user.email,
-    mobileNumber: user.mobileNumber,
     role: user.role,
-    profilePhoto: user.profilePhoto,
-    status: user.status,
-    age: user.age,
-    location: user.location,
-    followers: user.followers,
-    followings: user.followings,
   };
 
   const accessToken = createToken(
-    jwtPayload,
+    jwtPayload as TJwtPayload,
     config.jwt_access_secret as string,
     config.jwt_access_expires_in as string
   );
 
   const refreshToken = createToken(
-    jwtPayload,
+    jwtPayload as TJwtPayload,
     config.jwt_refresh_secret as string,
     config.jwt_refresh_expires_in as string
   );
@@ -190,16 +183,14 @@ const refreshToken = async (token: string) => {
   }
 
   const jwtPayload = {
-    _id: user._id,
-    name: user.name,
+    id: user._id,
+    name: user.firstName + ' ' + user.lastName,
     email: user.email,
-    mobileNumber: user.mobileNumber,
     role: user.role,
-    status: user.status,
   };
 
   const accessToken = createToken(
-    jwtPayload,
+    jwtPayload as TJwtPayload,
     config.jwt_access_secret as string,
     config.jwt_access_expires_in as string
   );
@@ -209,9 +200,9 @@ const refreshToken = async (token: string) => {
   };
 };
 
-const forgetPassword = async (userId: string) => {
+const forgetPassword = async (email: string) => {
   // checking if the user is exist
-  const user = await User.findById(userId);
+  const user = await User.findOne({ email });
 
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
@@ -225,18 +216,16 @@ const forgetPassword = async (userId: string) => {
   }
 
   const jwtPayload = {
-    _id: user._id,
-    name: user.name,
+    id: user._id,
+    name: user.firstName + ' ' + user.lastName,
     email: user.email,
-    mobileNumber: user.mobileNumber,
     role: user.role,
-    status: user.status,
   };
 
   const resetToken = createToken(
-    jwtPayload,
+    jwtPayload as TJwtPayload,
     config.jwt_access_secret as string,
-    '10m'
+    '5m'
   );
 
   const resetUILink = `${config.reset_pass_ui_link}?id=${user.id}&token=${resetToken} `;
@@ -244,14 +233,10 @@ const forgetPassword = async (userId: string) => {
   EmailHelper.sendEmail(
     user.email,
     resetUILink,
-    'Reset your password within ten mins!'
+    'Reset your password within five mins!'
   );
 
   // console.log(resetUILink);
-};
-
-const sendEmailToAdmin = (email: string, message: string, subject: string) => {
-  EmailHelper.sendEmailAdmin(email, message, subject);
 };
 
 const resetPassword = async (
@@ -277,10 +262,8 @@ const resetPassword = async (
     config.jwt_access_secret as string
   ) as JwtPayload;
 
-  //localhost:3000?id=A-0001&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJBLTAwMDEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MDI4NTA2MTcsImV4cCI6MTcwMjg1MTIxN30.-T90nRaz8-KouKki1DkCSMAbsHyb9yDi0djZU3D6QO4
-
-  if (payload.id !== decoded.userId) {
-    // console.log(payload.id, decoded.userId);
+  if (payload.id !== decoded.id) {
+    // console.log(payload.id, decoded.id);
     throw new AppError(httpStatus.FORBIDDEN, 'You are forbidden!');
   }
 
@@ -297,10 +280,13 @@ const resetPassword = async (
     },
     {
       password: newHashedPassword,
-      needsPasswordChange: false,
       passwordChangedAt: new Date(),
     }
   );
+};
+
+const sendEmailToAdmin = (email: string, message: string, subject: string) => {
+  EmailHelper.sendEmailAdmin(email, message, subject);
 };
 
 const subscribeUserIntoDB = async (payload: TCustomerDetails) => {
