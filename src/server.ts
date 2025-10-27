@@ -29,9 +29,7 @@ async function bootstrap() {
     // console.log('DB_URL:', config.db_url);
 
     await mongoose.connect(config.db_url as string);
-    // await mongoose.connect(
-    //   'mongodb+srv://utsho_roy:utsho%4011@cluster0.2g6iibi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
-    // );
+   
     console.log('🛢 Database connected successfully');
     await seed();
     server = app.listen(config.port, () => {
