@@ -14,7 +14,8 @@ export const USER_TYPE = {
 } as const;
 
 export const UserSearchableFields = [
-  'name',
+  'firstName',
+  'lastName',
   'email',
   'phone',
   'role',
