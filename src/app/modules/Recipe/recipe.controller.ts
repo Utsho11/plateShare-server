@@ -2,14 +2,9 @@ import httpStatus from 'http-status';
 import { catchAsync } from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { RecipeServices } from './recipe.service';
-import AppError from '../../errors/AppError';
 import { TImageFiles } from '../../interfaces/image.interface';
 
 const createRecipe = catchAsync(async (req, res) => {
-  if (!req.files) {
-    throw new AppError(400, 'Please upload an image');
-  }
-
   const recipe = await RecipeServices.createRecipeIntoDB(
     req.body,
     req.files as TImageFiles
@@ -70,33 +65,11 @@ const deleteRecipe = catchAsync(async (req, res) => {
   });
 });
 
-const voteOnRecipe = catchAsync(async (req, res) => {
-  const { recipeId, voteType } = req.body;
-
-  const email = req.user?.email;
-
-  if (!email) {
-    throw new AppError(httpStatus.UNAUTHORIZED, 'Unauthorized');
-  }
-
-  await RecipeServices.voteOnRecipe(
-    recipeId,
-    email,
-    voteType as 'upvotes' | 'downvotes'
-  );
-
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: 'Recipe vote updated successfully',
-    data: null,
-  });
-});
-
-const updateRecipeStatus = catchAsync(async (req, res) => {
-  const { recipeId, recipeStatus } = req.body;
-  const updatedItem = await RecipeServices.updateRecipeStatusIntoDB(
-    recipeId,
+const changeRecipeStatus = catchAsync(async (req, res) => {
+  const { recipeStatus } = req.body;
+  const { id } = req.params;
+  const updatedItem = await RecipeServices.changeRecipeStatusIntoDB(
+    id,
     recipeStatus
   );
 
@@ -114,6 +87,5 @@ export const RecipeControllers = {
   deleteRecipe,
   updateRecipe,
   getSingleRecipe,
-  voteOnRecipe,
-  updateRecipeStatus,
+  changeRecipeStatus,
 };

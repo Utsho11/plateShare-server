@@ -8,9 +8,11 @@ import { TImageFiles } from '../../interfaces/image.interface';
 
 // Create a new recipe in the database
 const createRecipeIntoDB = async (payload: TRecipe, images: TImageFiles) => {
-  const { recipeImages } = images;
+  const { files } = images;
 
-  payload.images = recipeImages.map((image) => image.path);
+  if (files && files.length > 0) {
+    payload.images = files.map((image) => image.path);
+  }
 
   const result = await Recipe.create(payload);
 
@@ -19,7 +21,13 @@ const createRecipeIntoDB = async (payload: TRecipe, images: TImageFiles) => {
 
 // Get all recipes from the database with query options (filter, sort, paginate, etc.)
 const getAllRecipesFromDB = async (query: Record<string, unknown>) => {
-  const items = new QueryBuilder(Recipe.find({ isDeleted: false }), query)
+  const items = new QueryBuilder(
+    Recipe.find({ isDeleted: false }).populate(
+      'author',
+      '_id name email profilePhoto'
+    ),
+    query
+  )
     .filter()
     .search(RecipeSearchableFields)
     .sort()
@@ -30,77 +38,10 @@ const getAllRecipesFromDB = async (query: Record<string, unknown>) => {
 };
 
 const getSingleRecipeFromDB = async (itemId: string) => {
-  const result = await Recipe.findById(itemId);
+  const result = await Recipe.findById(itemId)
+    .populate('author', '_id name email profilePhoto')
+    .where({ isDeleted: false });
   return result;
-};
-
-const voteOnRecipe = async (
-  recipeId: string,
-  email: string,
-  voteType: 'upvotes' | 'downvotes'
-) => {
-  // Find the recipe by ID
-
-  const recipe = await Recipe.findById(recipeId);
-  if (!recipe) {
-    throw new Error('Recipe not found');
-  }
-
-  // Convert the Mongoose document into a plain object
-  const updatedRecipe = recipe.toObject();
-
-  // Initialize upvotes and downvotes if they are undefined
-  updatedRecipe.upvotes = updatedRecipe.upvotes || [];
-  updatedRecipe.downvotes = updatedRecipe.downvotes || [];
-
-  if (voteType === 'upvotes') {
-    // Remove from downvotes if the user is switching vote
-    if (updatedRecipe.downvotes.includes(email)) {
-      updatedRecipe.downvotes = updatedRecipe.downvotes.filter(
-        (voter: string) => voter !== email
-      );
-    }
-
-    // Toggle upvote: add if not present, remove if already present
-    if (updatedRecipe.upvotes.includes(email)) {
-      updatedRecipe.upvotes = updatedRecipe.upvotes.filter(
-        (voter: string) => voter !== email
-      );
-    } else {
-      updatedRecipe.upvotes.push(email);
-    }
-  }
-
-  if (voteType === 'downvotes') {
-    // Remove from upvotes if the user is switching vote
-    if (updatedRecipe.upvotes.includes(email)) {
-      updatedRecipe.upvotes = updatedRecipe.upvotes.filter(
-        (voter: string) => voter !== email
-      );
-    }
-
-    // Toggle downvote: add if not present, remove if already present
-    if (updatedRecipe.downvotes.includes(email)) {
-      updatedRecipe.downvotes = updatedRecipe.downvotes.filter(
-        (voter: string) => voter !== email
-      );
-    } else {
-      updatedRecipe.downvotes.push(email);
-    }
-  }
-
-  // Save the updated recipe
-  try {
-    await Recipe.findByIdAndUpdate(
-      recipeId,
-      { upvotes: updatedRecipe.upvotes, downvotes: updatedRecipe.downvotes },
-      { new: true }
-    );
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error saving recipe:', error);
-    throw new Error('Error saving recipe');
-  }
 };
 
 // Update an existing recipe by ID
@@ -120,7 +61,7 @@ const updateRecipeIntoDB = async (id: string, updateData: Partial<TRecipe>) => {
   return recipe;
 };
 
-const updateRecipeStatusIntoDB = async (
+const changeRecipeStatusIntoDB = async (
   recipeId: string,
   recipeStatus: string
 ) => {
@@ -168,6 +109,5 @@ export const RecipeServices = {
   getSingleRecipeFromDB,
   updateRecipeIntoDB,
   deleteRecipeFromDB,
-  voteOnRecipe,
-  updateRecipeStatusIntoDB,
+  changeRecipeStatusIntoDB,
 };

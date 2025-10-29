@@ -1,54 +1,57 @@
 import { z } from 'zod';
+import { RECIPE_CATEGORY, RECIPE_STATUS, RECIPE_TYPE } from './recipe.constant';
 
-const createRecipeValidationSchema = z.object({
-  body: z.object({
-    name: z.string({
-      required_error: 'Recipe name is required',
-    }),
-    category: z.string({
-      required_error: 'Category is required',
-    }),
-    cookingTime: z.string({
-      required_error: 'Cooking time is required',
-    }),
-    recipeType: z.string({
-      required_error: 'Recipe Type is required',
-    }),
-    recipeStatus: z.string({
-      required_error: 'Recipe Status is required',
-    }),
-    description: z.string({
-      required_error: 'Description is required',
-    }),
-    ingredients: z.array(
-      z.string({
-        required_error: 'Ingredients are required',
-      })
-    ),
-    email: z.string().email({
-      message: 'Invalid email address',
-    }),
-  }),
+// ✅ Ingredient schema
+export const ingredientValidationSchema = z.object({
+  name: z.string({ required_error: 'Ingredient name is required' }).trim(),
+  quantity: z
+    .string({ required_error: 'Ingredient quantity is required' })
+    .trim(),
 });
 
-const updateRecipeValidationSchema = z.object({
+// ✅ Recipe schema
+export const createRecipeValidationSchema = z.object({
   body: z.object({
-    image: z.string().optional(),
-    name: z.string().optional(),
-    category: z.string().optional(),
-    cookingTime: z.string().optional(),
-    description: z.string().optional(),
-    ingredients: z.string().optional(),
-    email: z
-      .string()
-      .email({
-        message: 'Invalid email address',
+    title: z.string({ required_error: 'Recipe title is required' }).trim(),
+    description: z.string({ required_error: 'Description is required' }).trim(),
+    cookingTime: z
+      .string({ required_error: 'Cooking time is required' })
+      .trim(),
+
+    category: z.nativeEnum(RECIPE_CATEGORY, {
+      required_error: 'Category is required',
+      invalid_type_error: 'Invalid recipe category',
+    }),
+
+    recipeStatus: z.nativeEnum(RECIPE_STATUS, {
+      required_error: 'Recipe status is required',
+      invalid_type_error: 'Invalid recipe status',
+    }),
+
+    recipeType: z.nativeEnum(RECIPE_TYPE, {
+      required_error: 'Recipe type is required',
+      invalid_type_error: 'Invalid recipe type',
+    }),
+
+    ingredients: z
+      .array(ingredientValidationSchema, {
+        required_error: 'At least one ingredient is required',
       })
-      .optional(),
+      .nonempty('Recipe must have at least one ingredient'),
+
+    instructions: z
+      .array(z.string({ required_error: 'Instruction step is required' }))
+      .nonempty('At least one instruction step is required'),
+
+    author: z
+      .string({ required_error: 'Author ID is required' })
+      .regex(/^[0-9a-fA-F]{24}$/, 'Invalid author ObjectId'),
+
+    images: z.array(z.string().url('Invalid image URL')).optional(),
+    isDeleted: z.boolean().optional().default(false),
   }),
 });
 
 export const RecipeValidation = {
   createRecipeValidationSchema,
-  updateRecipeValidationSchema,
 };
