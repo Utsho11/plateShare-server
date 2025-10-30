@@ -47,7 +47,7 @@ const getSingleRecipeFromDB = async (itemId: string) => {
 
 // Update an existing recipe by ID
 
-export const updateRecipeIntoDB = async (
+const updateRecipeIntoDB = async (
   id: string,
   updateData: Partial<TRecipe>,
   userEmail: string

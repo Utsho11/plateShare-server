@@ -5,9 +5,6 @@ const createCommentValidationSchema = z.object({
     recipeId: z.string({
       required_error: 'Recipe ID is required',
     }),
-    userId: z.string({
-      required_error: 'User ID is required',
-    }),
     comment: z
       .string({
         required_error: 'Comment is required',
@@ -18,9 +15,6 @@ const createCommentValidationSchema = z.object({
 
 const updateCommentValidationSchema = z.object({
   body: z.object({
-    commentId: z.string({
-      required_error: 'User ID is required',
-    }),
     comment: z.string().min(1, 'Comment cannot be empty').optional(), // The comment field is optional in updates
   }),
 });

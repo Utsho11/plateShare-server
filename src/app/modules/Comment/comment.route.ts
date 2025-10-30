@@ -10,23 +10,23 @@ const router = express.Router();
 export const CommentRoutes = router;
 
 router.post(
-  '/add-comment',
-  auth(USER_ROLE.ADMIN, USER_ROLE.USER, USER_ROLE.PREMIUM),
+  '/create',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
   validateRequest(CommentValidation.createCommentValidationSchema),
   CommentController.createComment
 );
 
 router.get('/:recipeId', CommentController.getCommentsForRecipe);
 
-router.put(
-  '/edit-comment',
-  auth(USER_ROLE.ADMIN, USER_ROLE.USER, USER_ROLE.PREMIUM),
+router.patch(
+  '/edit/:id',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
   validateRequest(CommentValidation.updateCommentValidationSchema),
   CommentController.editComment
 );
 
 router.delete(
-  '/delete-comment/:commentId',
-  auth(USER_ROLE.ADMIN, USER_ROLE.USER, USER_ROLE.PREMIUM),
+  '/delete/:id',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
   CommentController.deleteComment
 );

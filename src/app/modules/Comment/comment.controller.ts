@@ -4,7 +4,10 @@ import sendResponse from '../../utils/sendResponse';
 import { catchAsync } from '../../utils/catchAsync';
 
 const createComment = catchAsync(async (req, res) => {
-  const { recipeId, userId, comment } = req.body;
+  const { recipeId, comment } = req.body;
+  const userId = req.user.id;
+  // console.log(req.user);
+
   const result = await CommentService.addComment(recipeId, userId, comment);
 
   sendResponse(res, {
@@ -16,9 +19,11 @@ const createComment = catchAsync(async (req, res) => {
 });
 
 const editComment = catchAsync(async (req, res) => {
-  const { comment, commentId } = req.body;
+  const { comment } = req.body;
+  const userId = req.user.id;
+  const commentId = req.params.id;
 
-  const result = await CommentService.editComment(comment, commentId);
+  const result = await CommentService.editComment(comment, commentId, userId);
 
   sendResponse(res, {
     success: true,
@@ -29,9 +34,10 @@ const editComment = catchAsync(async (req, res) => {
 });
 
 const deleteComment = catchAsync(async (req, res) => {
-  const token = req.headers.authorization as string;
-  const { commentId } = req.params;
-  const result = await CommentService.deleteComment(commentId, token);
+  // const token = req.headers.authorization as string;
+  const userId = req.user.id;
+  const { id: commentId } = req.params;
+  const result = await CommentService.deleteComment(commentId, userId);
 
   sendResponse(res, {
     success: true,

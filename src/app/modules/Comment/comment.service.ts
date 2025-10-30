@@ -1,9 +1,9 @@
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { Comment } from './comment.model';
-import config from '../../config';
-import { JwtPayload } from 'jsonwebtoken';
-import { verifyToken } from '../../utils/verifyJWT';
+import { User } from '../User/user.model';
+import { USER_STATUS } from '../User/user.constant';
+import { Recipe } from '../Recipe/recipe.model';
 
 // Add comment
 const addComment = async (
@@ -11,47 +11,92 @@ const addComment = async (
   userId: string,
   comment: string
 ) => {
+  const user = await User.findById(userId).where({
+    status: USER_STATUS.ACTIVE,
+  });
+
+  // console.log({ userId });
+
+  if (!user) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      'You are not authorized to add comment'
+    );
+  }
+
+  const recipeExists = await Recipe.findById(recipeId).where({
+    isDeleted: false,
+  });
+
+  if (!recipeExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Recipe not found');
+  }
+
   const newComment = await Comment.create({ recipeId, userId, comment });
+
   return newComment;
 };
 
 // Edit comment
-const editComment = async (newComment: string, commentId: string) => {
-  const comment = await Comment.findOneAndUpdate(
-    { _id: commentId },
-    { comment: newComment, updatedAt: Date.now() },
+const editComment = async (
+  newComment: string,
+  commentId: string,
+  userId: string
+) => {
+  const user = await User.findById(userId).where({
+    status: USER_STATUS.ACTIVE,
+  });
+
+  // console.log({ userId });
+
+  if (!user) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      'You are not authorized to add comment'
+    );
+  }
+
+  const updatedComment = await Comment.findOneAndUpdate(
+    { _id: commentId, userId },
+    { comment: newComment, updatedAt: new Date() },
     { new: true }
   );
-  if (!comment) throw new AppError(httpStatus.NOT_FOUND, 'Comment not found');
-  return comment;
+
+  if (!updatedComment) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'Comment not found or not owned by you'
+    );
+  }
+
+  return updatedComment;
 };
 
 // Delete comment
-const deleteComment = async (commentId: string, token: string) => {
-  if (!token) {
-    throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
+const deleteComment = async (commentId: string, userId: string) => {
+  const user = await User.findById(userId).where({
+    status: USER_STATUS.ACTIVE,
+  });
+
+  if (!user) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      'You are not authorized to add comment'
+    );
   }
 
-  const decoded = verifyToken(
-    token,
-    config.jwt_access_secret as string
-  ) as JwtPayload;
-
-  const { _id } = decoded;
-
-  const result = await Comment.findByIdAndDelete({
-    _id: commentId,
-    userId: _id,
-  });
+  const result = await Comment.findOneAndDelete({ _id: commentId, userId });
   if (!result) throw new AppError(httpStatus.NOT_FOUND, 'Comment not found');
   return result;
 };
 
 // Get all comments for a recipe
 const getCommentsForRecipe = async (recipeId: string) => {
-  return await Comment.find({ recipeId })
+  const comments = await Comment.find({ recipeId })
     .sort({ createdAt: -1 })
-    .populate('userId'); // Sort by createdAt in ascending order (oldest first)
+    .populate('userId', '_id firstName lastName email profilePhoto');
+
+  return comments;
 };
 
 export const CommentService = {
