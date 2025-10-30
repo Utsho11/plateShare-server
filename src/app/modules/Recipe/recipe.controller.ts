@@ -42,8 +42,13 @@ const getSingleRecipe = catchAsync(async (req, res) => {
 });
 
 const updateRecipe = catchAsync(async (req, res) => {
+  const u_email = req.user?.email;
   const { id } = req.params;
-  const updatedItem = await RecipeServices.updateRecipeIntoDB(id, req.body);
+  const updatedItem = await RecipeServices.updateRecipeIntoDB(
+    id,
+    req.body,
+    u_email
+  );
 
   sendResponse(res, {
     success: true,

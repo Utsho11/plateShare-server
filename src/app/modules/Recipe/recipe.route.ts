@@ -24,7 +24,7 @@ router.get('/', RecipeControllers.getAllRecipe);
 
 router.get('/:id', RecipeControllers.getSingleRecipe);
 
-router.put(
+router.patch(
   '/update/:id',
   auth(USER_ROLE.ADMIN, USER_ROLE.USER),
   RecipeControllers.updateRecipe

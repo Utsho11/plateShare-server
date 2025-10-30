@@ -5,6 +5,7 @@ import { TRecipe } from './recipe.interface';
 import { Recipe } from './recipe.model';
 import { RecipeSearchableFields } from './recipe.constant';
 import { TImageFiles } from '../../interfaces/image.interface';
+import type { TUser } from '../User/user.interface';
 
 // Create a new recipe in the database
 const createRecipeIntoDB = async (payload: TRecipe, images: TImageFiles) => {
@@ -45,20 +46,37 @@ const getSingleRecipeFromDB = async (itemId: string) => {
 };
 
 // Update an existing recipe by ID
-const updateRecipeIntoDB = async (id: string, updateData: Partial<TRecipe>) => {
-  const isRecipeExists = await Recipe.findOne({
-    _id: id,
-    isDeleted: false,
-  });
 
-  if (!isRecipeExists) {
+export const updateRecipeIntoDB = async (
+  id: string,
+  updateData: Partial<TRecipe>,
+  userEmail: string
+) => {
+  const recipe = await Recipe.findOne({ _id: id, isDeleted: false })
+    .populate<{ author: Pick<TUser, 'email'> }>('author', 'email')
+    .lean(); // makes it a plain JS object, faster read
+
+  if (!recipe) {
     throw new AppError(httpStatus.NOT_FOUND, 'Recipe not found!');
   }
 
-  const recipe = await Recipe.findByIdAndUpdate(id, updateData, {
+  const authorEmail =
+    typeof recipe.author === 'object' && 'email' in recipe.author
+      ? recipe.author.email
+      : null;
+
+  if (userEmail && authorEmail !== userEmail) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      'You are not authorized to update this recipe!'
+    );
+  }
+
+  const updatedRecipe = await Recipe.findByIdAndUpdate(id, updateData, {
     new: true,
   });
-  return recipe;
+
+  return updatedRecipe;
 };
 
 const changeRecipeStatusIntoDB = async (
