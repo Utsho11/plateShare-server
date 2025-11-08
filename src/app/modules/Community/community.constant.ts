@@ -1,0 +1,5 @@
+export const COMMUNITY_ROLES = {
+  MEMBER: 'MEMBER',
+  ADMIN: 'ADMIN',
+  MODERATOR: 'MODERATOR',
+};
