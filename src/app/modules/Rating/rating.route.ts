@@ -10,7 +10,7 @@ export const RatingRoutes = router;
 
 router.post(
   '/add-rating',
-  auth(USER_ROLE.ADMIN, USER_ROLE.USER, USER_ROLE.PREMIUM),
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
   validateRequest(createRatingValidationSchema),
   RatingController.addRating
 );

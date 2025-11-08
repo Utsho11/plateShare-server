@@ -54,6 +54,7 @@ const registerUser = async (req: Request) => {
   );
 
   return {
+    id: newUser._id,
     accessToken,
     refreshToken,
   };

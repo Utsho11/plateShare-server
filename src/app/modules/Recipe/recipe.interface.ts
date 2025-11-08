@@ -25,6 +25,11 @@ export type TRecipe = {
   isDeleted?: boolean;
 };
 
+export const VOTE_TYPE = {
+  UPVOTE: 'UPVOTE',
+  DOWNVOTE: 'DOWNVOTE',
+};
+
 /*
   "title": "Spicy Chicken Curry",
   "description":

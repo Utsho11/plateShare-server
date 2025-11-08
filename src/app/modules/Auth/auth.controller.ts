@@ -8,7 +8,7 @@ import { Request, Response } from 'express';
 
 const registerUser = catchAsync(async (req, res) => {
   const result = await AuthServices.registerUser(req);
-  const { refreshToken, accessToken } = result;
+  const { id, refreshToken, accessToken } = result;
 
   res.cookie('refreshToken', refreshToken, {
     secure: config.NODE_ENV === 'production',
@@ -20,6 +20,7 @@ const registerUser = catchAsync(async (req, res) => {
     success: true,
     message: 'User registered in successfully!',
     data: {
+      id,
       accessToken,
       refreshToken,
     },

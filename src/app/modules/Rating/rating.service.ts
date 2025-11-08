@@ -67,12 +67,11 @@ const getRatingFromDB = async () => {
     // Return the recipe with its average rating
     return {
       recipeId: recipe._id,
-      recipeName: recipe.name,
+      recipeName: recipe.title,
       averageRating: averageRating,
       totalRatings: recipeRatings.length, // Optionally include the count of ratings
     };
   });
-
 
   return averageRatings; // This will be an array of recipes with their average ratings
 };
