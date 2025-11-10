@@ -1,5 +1,5 @@
 import type { Types } from 'mongoose';
-import type { COMMUNITY_ROLES } from './community.constant';
+import type { COMMUNITY_ROLES, JOIN_STATUS } from './community.constant';
 
 export type TCommunity = {
   _id: Types.ObjectId;
@@ -13,6 +13,7 @@ export type TCommunityMember = {
   community_id: Types.ObjectId;
   user_id: Types.ObjectId;
   role: keyof typeof COMMUNITY_ROLES;
+  join_status: keyof typeof JOIN_STATUS;
   joinedAt?: Date;
   leftAt?: Date;
 };

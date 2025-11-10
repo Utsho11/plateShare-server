@@ -3,3 +3,9 @@ export const COMMUNITY_ROLES = {
   ADMIN: 'ADMIN',
   MODERATOR: 'MODERATOR',
 };
+
+export const JOIN_STATUS = {
+  ACCEPT: 'ACCEPT',
+  PENDING: 'PENDING',
+  REJECT: 'REJECT',
+};
