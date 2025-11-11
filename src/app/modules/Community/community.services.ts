@@ -40,6 +40,22 @@ const createCommunityIntoDB = async (req: Request) => {
   }
 };
 
+const createCommunityMemberIntoDB = async (req: Request) => {
+  const payload = req.body;
+  const id = req.user?.id;
+
+  // console.log(payload);
+
+  const communityMember = await CommunityMember.create({
+    community_id: payload.community_id,
+    user_id: id,
+    role: COMMUNITY_ROLES.MEMBER,
+    join_status: JOIN_STATUS.PENDING,
+  });
+  return communityMember;
+};
+
 export const CommunityServices = {
   createCommunityIntoDB,
+  createCommunityMemberIntoDB,
 };

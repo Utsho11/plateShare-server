@@ -12,3 +12,9 @@ router.post(
   auth(USER_ROLE.ADMIN, USER_ROLE.USER),
   CommunityControllers.createCommunity
 );
+
+router.post(
+  '/create-member',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+  CommunityControllers.createCommunityMember
+);
