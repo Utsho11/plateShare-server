@@ -2,6 +2,7 @@ import type { Request } from 'express';
 import mongoose from 'mongoose';
 import { Community, CommunityMember } from './community.model';
 import { COMMUNITY_ROLES, JOIN_STATUS } from './community.constant';
+import type { TCommunityMember } from './community.interface';
 
 const createCommunityIntoDB = async (req: Request) => {
   const u_id = req.user?.id;
@@ -55,7 +56,31 @@ const createCommunityMemberIntoDB = async (req: Request) => {
   return communityMember;
 };
 
+const acceptCommunityMemberIntoDB = async (req: Request) => {
+  const { c_id, u_id } = req.body;
+  const admin_id = req.user?.id;
+
+  const communityRole = await CommunityMember.findOne({
+    community_id: c_id,
+    user_id: admin_id,
+  });
+
+  if (
+    [COMMUNITY_ROLES.ADMIN, COMMUNITY_ROLES.MODERATOR].includes(
+      communityRole?.role as TCommunityMember['role']
+    )
+  ) {
+    const updatedMember = await CommunityMember.findOneAndUpdate(
+      { community_id: c_id, user_id: u_id },
+      { join_status: JOIN_STATUS.ACCEPT, joinedAt: new Date() },
+      { new: true }
+    );
+    return updatedMember;
+  } else return null;
+};
+
 export const CommunityServices = {
   createCommunityIntoDB,
   createCommunityMemberIntoDB,
+  acceptCommunityMemberIntoDB,
 };

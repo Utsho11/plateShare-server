@@ -18,3 +18,9 @@ router.post(
   auth(USER_ROLE.ADMIN, USER_ROLE.USER),
   CommunityControllers.createCommunityMember
 );
+
+router.patch(
+  '/accept-member',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+  CommunityControllers.acceptCommunityMember
+);

@@ -25,7 +25,19 @@ const createCommunityMember = catchAsync(async (req, res) => {
   });
 });
 
+const acceptCommunityMember = catchAsync(async (req, res) => {
+  const result = await CommunityServices.acceptCommunityMemberIntoDB(req);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Community Member Accepted Successfully',
+    data: result,
+  });
+});
+
 export const CommunityControllers = {
   createCommunity,
   createCommunityMember,
+  acceptCommunityMember,
 };

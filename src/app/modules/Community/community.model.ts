@@ -43,9 +43,18 @@ const CommunityMemberSchema = new Schema<TCommunityMember>(
       enum: Object.values(JOIN_STATUS),
       required: true,
     },
+    joinedAt: {
+      type: Date,
+      default: null,
+    },
+    leftAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
-    timestamps: { createdAt: 'joinedAt', updatedAt: 'leftAt' },
+    timestamps: true,
+    virtuals: true,
   }
 );
 
