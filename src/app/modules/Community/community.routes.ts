@@ -24,3 +24,9 @@ router.patch(
   auth(USER_ROLE.ADMIN, USER_ROLE.USER),
   CommunityControllers.acceptCommunityMember
 );
+
+router.get(
+  '/get-all',
+  // auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+  CommunityControllers.getAllCommunities
+);

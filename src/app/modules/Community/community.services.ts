@@ -79,8 +79,13 @@ const acceptCommunityMemberIntoDB = async (req: Request) => {
   } else return null;
 };
 
+const getAllCommunitiesFromDB = async () => {
+  const communities = await Community.find();
+  return communities;
+}
+
 export const CommunityServices = {
   createCommunityIntoDB,
   createCommunityMemberIntoDB,
-  acceptCommunityMemberIntoDB,
+  acceptCommunityMemberIntoDB,getAllCommunitiesFromDB
 };
