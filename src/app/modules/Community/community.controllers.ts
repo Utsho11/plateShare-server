@@ -47,9 +47,22 @@ const getAllCommunities = catchAsync(async (req, res) => {
   });
 });
 
+const getAllMembersByCommunity = catchAsync(async (req, res) => {
+  const result = await CommunityServices.getAllMembersByCommunityFromDB(req);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Community Members Fetched Successfully',
+    data: result,
+  });
+});
+
+
 export const CommunityControllers = {
   createCommunity,
   createCommunityMember,
   acceptCommunityMember,
-  getAllCommunities
+  getAllCommunities,
+  getAllMembersByCommunity
 };

@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 import { Community, CommunityMember } from './community.model';
 import { COMMUNITY_ROLES, JOIN_STATUS } from './community.constant';
 import type { TCommunityMember } from './community.interface';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
 
 const createCommunityIntoDB = async (req: Request) => {
   const u_id = req.user?.id;
@@ -84,8 +86,30 @@ const getAllCommunitiesFromDB = async () => {
   return communities;
 }
 
+const getAllMembersByCommunityFromDB = async (req:Request) => {
+
+  const { c_id } = req.params;
+  const user_id = req.user?.id;
+
+  const isUserExists = await CommunityMember.findOne({
+    community_id: c_id,
+    user_id: user_id,
+    join_status: JOIN_STATUS.ACCEPT,
+  });
+
+  if(isUserExists){
+const communityMembers = await CommunityMember.find().where({
+  community_id:c_id
+})
+    return communityMembers;
+  }else{
+    throw new AppError(httpStatus.NOT_FOUND,"Something went wrong!!")
+  }
+
+  // const communities = await Community.find();
+}
 export const CommunityServices = {
   createCommunityIntoDB,
   createCommunityMemberIntoDB,
-  acceptCommunityMemberIntoDB,getAllCommunitiesFromDB
+  acceptCommunityMemberIntoDB,getAllCommunitiesFromDB,getAllMembersByCommunityFromDB
 };

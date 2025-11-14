@@ -30,3 +30,5 @@ router.get(
   // auth(USER_ROLE.ADMIN, USER_ROLE.USER),
   CommunityControllers.getAllCommunities
 );
+
+router.get('/get-all-members/:c_id',auth(USER_ROLE.ADMIN,USER_ROLE.USER),CommunityControllers.getAllMembersByCommunity)
