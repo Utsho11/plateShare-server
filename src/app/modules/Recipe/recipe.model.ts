@@ -1,11 +1,18 @@
 import { model, Schema } from 'mongoose';
-import { TRecipe, TIngredient } from './recipe.interface';
+import { TRecipe, TIngredient, TInstruction } from './recipe.interface';
 import { RECIPE_CATEGORY, RECIPE_STATUS, RECIPE_TYPE } from './recipe.constant';
 
 const ingredientSchema = new Schema<TIngredient>(
   {
     name: { type: String, required: true },
     quantity: { type: String, required: true },
+  },
+  { _id: false }
+);
+
+const instructionSchema = new Schema<TInstruction>(
+  {
+    step: { type: String, required: true },
   },
   { _id: false }
 );
@@ -47,7 +54,7 @@ const recipeSchema = new Schema<TRecipe>(
       required: true,
     },
     instructions: {
-      type: [String],
+      type: [instructionSchema],
       required: true,
     },
     author: {
@@ -66,9 +73,26 @@ const recipeSchema = new Schema<TRecipe>(
     },
   },
   {
-    timestamps: true,
-    virtuals: true,
+     timestamps: true,
+    toJSON: { virtuals: true, versionKey: false, getters: true },
+    toObject: { virtuals: true, getters: true },
+    id: false
   }
 );
+
+recipeSchema.virtual("upvoteCount", {
+  ref: "UpVote",
+  localField: "_id",
+  foreignField: "post",
+  count: true,
+});
+
+recipeSchema.virtual("downvoteCount", {
+  ref: "DownVote",
+  localField: "_id",
+  foreignField: "post",
+  count: true,
+});
+
 
 export const Recipe = model<TRecipe>('Recipe', recipeSchema);

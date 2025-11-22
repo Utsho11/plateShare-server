@@ -23,10 +23,10 @@ const createRecipeIntoDB = async (payload: TRecipe, images: TImageFiles) => {
 // Get all recipes from the database with query options (filter, sort, paginate, etc.)
 const getAllRecipesFromDB = async (query: Record<string, unknown>) => {
   const items = new QueryBuilder(
-    Recipe.find({ isDeleted: false }).populate(
-      'author',
-      '_id name email profilePhoto'
-    ),
+    Recipe.find({ isDeleted: false })
+      .populate('author', '_id name email profilePhoto')
+      .populate('upvoteCount')
+      .populate('downvoteCount'),
     query
   )
     .filter()
@@ -34,9 +34,12 @@ const getAllRecipesFromDB = async (query: Record<string, unknown>) => {
     .sort()
     .paginate()
     .fields();
+
   const result = await items.modelQuery;
   return result;
 };
+
+
 
 const getSingleRecipeFromDB = async (itemId: string) => {
   const result = await Recipe.findById(itemId)

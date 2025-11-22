@@ -9,6 +9,10 @@ export const ingredientValidationSchema = z.object({
     .trim(),
 });
 
+export const instructionValidationSchema = z.object({
+  step: z.string({ required_error: 'Instruction step is required' }).trim(),
+});
+
 // ✅ Recipe schema
 export const createRecipeValidationSchema = z.object({
   body: z.object({
@@ -40,12 +44,11 @@ export const createRecipeValidationSchema = z.object({
       .nonempty('Recipe must have at least one ingredient'),
 
     instructions: z
-      .array(z.string({ required_error: 'Instruction step is required' }))
-      .nonempty('At least one instruction step is required'),
+      .array(instructionValidationSchema, {
+        required_error: 'At least one instruction is required',
+      })
+      .nonempty('Recipe must have at least one instruction'),
 
-    author: z
-      .string({ required_error: 'Author ID is required' })
-      .regex(/^[0-9a-fA-F]{24}$/, 'Invalid author ObjectId'),
 
     images: z.array(z.string().url('Invalid image URL')).optional(),
     isDeleted: z.boolean().optional().default(false),

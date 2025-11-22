@@ -5,8 +5,14 @@ import { RecipeServices } from './recipe.service';
 import { TImageFiles } from '../../interfaces/image.interface';
 
 const createRecipe = catchAsync(async (req, res) => {
+
+  const authorID = req.user?.id;
+
+  // console.log("authorID",req.user);
+  
+
   const recipe = await RecipeServices.createRecipeIntoDB(
-    req.body,
+    { ...req.body, author: authorID },
     req.files as TImageFiles
   );
 

@@ -10,6 +10,10 @@ export type TIngredient = {
   quantity: string;
 };
 
+export type TInstruction= {
+  step: string;
+}
+
 export type TRecipe = {
   _id: string;
   title: string;
@@ -19,7 +23,7 @@ export type TRecipe = {
   recipeStatus: keyof typeof RECIPE_STATUS;
   recipeType: keyof typeof RECIPE_TYPE;
   cookingTime: string;
-  instructions: string[];
+  instructions: TInstruction[];
   author: Schema.Types.ObjectId;
   images?: string[];
   isDeleted?: boolean;
