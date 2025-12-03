@@ -32,3 +32,5 @@ router.get(
 );
 
 router.get('/get-all-members/:c_id',auth(USER_ROLE.ADMIN,USER_ROLE.USER),CommunityControllers.getAllMembersByCommunity)
+
+router.delete('/leave-community',auth(USER_ROLE.ADMIN,USER_ROLE.USER),CommunityControllers.leaveCommunity)

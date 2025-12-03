@@ -58,11 +58,22 @@ const getAllMembersByCommunity = catchAsync(async (req, res) => {
   });
 });
 
+const leaveCommunity = catchAsync(async (req, res) => {
+  const result = await CommunityServices.leaveCommunityFromDB(req);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Community Member Left Successfully',
+    data: result,
+  });
+});
 
 export const CommunityControllers = {
   createCommunity,
   createCommunityMember,
   acceptCommunityMember,
   getAllCommunities,
-  getAllMembersByCommunity
+  getAllMembersByCommunity,
+  leaveCommunity
 };
