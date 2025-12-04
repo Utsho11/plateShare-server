@@ -31,6 +31,12 @@ router.get(
   CommunityControllers.getAllCommunities
 );
 
+router.get(
+  '/get-my-communities',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+  CommunityControllers.getAllMyCommunities
+);
+
 router.get('/get-all-members/:c_id',auth(USER_ROLE.ADMIN,USER_ROLE.USER),CommunityControllers.getAllMembersByCommunity)
 
 router.delete('/leave-community',auth(USER_ROLE.ADMIN,USER_ROLE.USER),CommunityControllers.leaveCommunity)

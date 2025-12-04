@@ -86,6 +86,14 @@ const getAllCommunitiesFromDB = async () => {
   return communities;
 }
 
+const getAllMyCommunitiesFromDB = async (req:Request) => {
+  const user_id = req.user?.id;
+  const communities = await CommunityMember.find().where({
+    user_id,
+  }).populate('community_id');
+  return communities;
+}
+
 const getAllMembersByCommunityFromDB = async (req:Request) => {
 
   const { c_id } = req.params;
@@ -111,31 +119,23 @@ const communityMembers = await CommunityMember.find().where({
 
 const leaveCommunityFromDB = async (req:Request) => {
   const { c_id } = req.body;
-  const user_id = req.user?.id;
 
-  const isAdmin = await CommunityMember.find({
-    community_id: c_id,
-    user_id: user_id,
-    role: COMMUNITY_ROLES.ADMIN
-  })
+  const isAdmin = await CommunityMember.findById(c_id)
 
   // console.log(isAdmin);
   
 
-  if(isAdmin){
+  if(isAdmin?.role === COMMUNITY_ROLES.ADMIN){
     throw new AppError(httpStatus.BAD_REQUEST,"Admin can't leave the community!!")
   }
 
-  const res = await CommunityMember.findOneAndDelete({
-    community_id:c_id,
-    user_id:user_id
-  })
+  const res = await CommunityMember.findByIdAndDelete(c_id)
 
   return res;
 }
 
 export const CommunityServices = {
   createCommunityIntoDB,
-  createCommunityMemberIntoDB,
+  createCommunityMemberIntoDB,getAllMyCommunitiesFromDB,
   acceptCommunityMemberIntoDB,getAllCommunitiesFromDB,getAllMembersByCommunityFromDB,leaveCommunityFromDB
 };
