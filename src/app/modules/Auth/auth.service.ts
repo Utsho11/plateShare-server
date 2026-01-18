@@ -80,7 +80,7 @@ const loginUser = async (payload: TLoginUser) => {
   //checking if the password is correct
 
   if (!(await User.isPasswordMatched(payload?.password, user?.password)))
-    throw new AppError(httpStatus.FORBIDDEN, 'Password do not matched');
+    throw new AppError(httpStatus.FORBIDDEN, 'Password does not matched');
 
   //create token and sent to the  client
 
