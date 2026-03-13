@@ -1,4 +1,4 @@
-import { cloudinaryUpload } from '../../../../../../Assignment/PlateShare/plateShare-server/src/app/config/cloudinary.config';
+import { cloudinaryUpload } from '../config/cloudinary.config';
 import { TImageFiles } from '../interfaces/image.interface';
 
 export const deleteImageFromCloudinary = (files: TImageFiles) => {
