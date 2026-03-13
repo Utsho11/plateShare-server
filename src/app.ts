@@ -13,7 +13,9 @@ const app: Application = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+// console.log(process.env.FRONTEND_URL);
+
+app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 app.use(cookieParser());
 
 // Parser middleware
