@@ -26,8 +26,6 @@ const getSingleUser = catchAsync(async (req, res) => {
 });
 
 const getMe = catchAsync(async (req, res) => {
-  // console.log('id', req);
-
   const user = await UserServices.getSingleUserFromDB(req.user.id);
 
   sendResponse(res, {
@@ -49,9 +47,21 @@ const updateMyProfile = catchAsync(async (req, res) => {
   });
 });
 
+const updateUserStatusAndRole = catchAsync(async (req, res) => {
+  const user = await UserServices.updateUserStatusAndRole(req.params.id, req.body);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User Status/Role Updated Successfully',
+    data: user,
+  });
+});
+
 export const UserControllers = {
   getAllUsers,
   getSingleUser,
   getMe,
   updateMyProfile,
+  updateUserStatusAndRole,
 };

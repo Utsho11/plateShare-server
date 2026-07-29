@@ -33,3 +33,9 @@ router.patch(
   validateRequest(UserValidation.updateUserValidationSchema),
   UserControllers.updateMyProfile
 );
+
+router.patch(
+  '/:id/status-role',
+  auth(USER_ROLE.ADMIN),
+  UserControllers.updateUserStatusAndRole
+);

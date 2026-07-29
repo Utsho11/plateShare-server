@@ -6,8 +6,6 @@ import type { TUser } from './user.interface';
 import { User } from './user.model';
 
 const getAllUsersFromDB = async (query: Record<string, unknown>) => {
-  // console.log({ query });
-
   const users = new QueryBuilder(User.find(), query)
     .fields()
     .paginate()
@@ -16,17 +14,14 @@ const getAllUsersFromDB = async (query: Record<string, unknown>) => {
     .search(UserSearchableFields);
 
   const result = await users.modelQuery;
-
   return result;
 };
 
 const getSingleUserFromDB = async (id: string) => {
   const user = await User.findById(id);
-
   if (!user) {
     throw new AppError(404, 'User not found');
   }
-
   return user;
 };
 
@@ -50,8 +45,23 @@ const updateUserProfile = async (id: string, req: Request) => {
   return updatedUser;
 };
 
+const updateUserStatusAndRole = async (id: string, payload: Partial<TUser>) => {
+  const user = await User.findById(id);
+  if (!user) {
+    throw new AppError(404, 'User not found');
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+  });
+
+  return updatedUser;
+};
+
 export const UserServices = {
   getAllUsersFromDB,
   getSingleUserFromDB,
   updateUserProfile,
+  updateUserStatusAndRole,
 };
