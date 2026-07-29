@@ -35,6 +35,30 @@ const getAllRecipe = catchAsync(async (req, res) => {
   });
 });
 
+const getRecipesByAuthor = catchAsync(async (req, res) => {
+  const { authorId } = req.params;
+  const item = await RecipeServices.getRecipesByAuthorFromDB(authorId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Recipes retrieved by author successfully',
+    data: item,
+  });
+});
+
+const getMyRecipes = catchAsync(async (req, res) => {
+  const userId = req.user?.id;
+  const item = await RecipeServices.getRecipesByAuthorFromDB(userId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'My recipes retrieved successfully',
+    data: item,
+  });
+});
+
 const getSingleRecipe = catchAsync(async (req, res) => {
   const itemId = req.params.id;
   const item = await RecipeServices.getSingleRecipeFromDB(itemId);
@@ -95,6 +119,8 @@ const changeRecipeStatus = catchAsync(async (req, res) => {
 export const RecipeControllers = {
   createRecipe,
   getAllRecipe,
+  getRecipesByAuthor,
+  getMyRecipes,
   deleteRecipe,
   updateRecipe,
   getSingleRecipe,

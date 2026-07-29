@@ -23,7 +23,7 @@ const registerUser = async (req: Request) => {
   if (user) {
     throw new AppError(
       httpStatus.NOT_FOUND,
-      'This user is already exist with this email!'
+      'This user is already exist with this email!',
     );
   }
 
@@ -44,13 +44,13 @@ const registerUser = async (req: Request) => {
   const accessToken = createToken(
     jwtPayload as TJwtPayload,
     config.jwt_access_secret as string,
-    config.jwt_access_expires_in as string
+    config.jwt_access_expires_in as string,
   );
 
   const refreshToken = createToken(
     jwtPayload as TJwtPayload,
     config.jwt_refresh_secret as string,
-    config.jwt_refresh_expires_in as string
+    config.jwt_refresh_expires_in as string,
   );
 
   return {
@@ -79,6 +79,8 @@ const loginUser = async (payload: TLoginUser) => {
 
   //checking if the password is correct
 
+  // console.log(payload.password);
+
   if (!(await User.isPasswordMatched(payload?.password, user?.password)))
     throw new AppError(httpStatus.FORBIDDEN, 'Password does not matched');
 
@@ -94,13 +96,13 @@ const loginUser = async (payload: TLoginUser) => {
   const accessToken = createToken(
     jwtPayload as TJwtPayload,
     config.jwt_access_secret as string,
-    config.jwt_access_expires_in as string
+    config.jwt_access_expires_in as string,
   );
 
   const refreshToken = createToken(
     jwtPayload as TJwtPayload,
     config.jwt_refresh_secret as string,
-    config.jwt_refresh_expires_in as string
+    config.jwt_refresh_expires_in as string,
   );
 
   return {
@@ -111,7 +113,7 @@ const loginUser = async (payload: TLoginUser) => {
 
 const changePassword = async (
   userData: JwtPayload,
-  payload: { oldPassword: string; newPassword: string }
+  payload: { oldPassword: string; newPassword: string },
 ) => {
   // checking if the user is exist
   const user = await User.isUserExistsByEmail(userData.email);
@@ -136,7 +138,7 @@ const changePassword = async (
   //hash new password
   const newHashedPassword = await bcrypt.hash(
     payload.newPassword,
-    Number(config.bcrypt_salt_rounds)
+    Number(config.bcrypt_salt_rounds),
   );
 
   await User.findOneAndUpdate(
@@ -147,7 +149,7 @@ const changePassword = async (
     {
       password: newHashedPassword,
       passwordChangedAt: new Date(),
-    }
+    },
   );
 
   return null;
@@ -157,7 +159,7 @@ const refreshToken = async (token: string) => {
   // checking if the given token is valid
   const decoded = jwt.verify(
     token,
-    config.jwt_refresh_secret as string
+    config.jwt_refresh_secret as string,
   ) as JwtPayload;
 
   const { email, iat } = decoded;
@@ -193,7 +195,7 @@ const refreshToken = async (token: string) => {
   const accessToken = createToken(
     jwtPayload as TJwtPayload,
     config.jwt_access_secret as string,
-    config.jwt_access_expires_in as string
+    config.jwt_access_expires_in as string,
   );
 
   return {
@@ -226,7 +228,7 @@ const forgetPassword = async (email: string) => {
   const resetToken = createToken(
     jwtPayload as TJwtPayload,
     config.jwt_access_secret as string,
-    '5m'
+    '5m',
   );
 
   const resetUILink = `${config.reset_pass_ui_link}?id=${user.id}&token=${resetToken} `;
@@ -234,15 +236,17 @@ const forgetPassword = async (email: string) => {
   EmailHelper.sendEmail(
     user.email,
     resetUILink,
-    'Reset your password within five mins!'
+    'Reset your password within five mins!',
   );
 
   // console.log(resetUILink);
+
+  return 'Reset Link is sent to your email.';
 };
 
 const resetPassword = async (
   payload: { id: string; newPassword: string },
-  token: string
+  token: string,
 ) => {
   // checking if the user is exist
   const user = await User.findById(payload?.id);
@@ -260,7 +264,7 @@ const resetPassword = async (
 
   const decoded = jwt.verify(
     token,
-    config.jwt_access_secret as string
+    config.jwt_access_secret as string,
   ) as JwtPayload;
 
   if (payload.id !== decoded.id) {
@@ -271,7 +275,7 @@ const resetPassword = async (
   //hash new password
   const newHashedPassword = await bcrypt.hash(
     payload.newPassword,
-    Number(config.bcrypt_salt_rounds)
+    Number(config.bcrypt_salt_rounds),
   );
 
   await User.findOneAndUpdate(
@@ -282,8 +286,10 @@ const resetPassword = async (
     {
       password: newHashedPassword,
       passwordChangedAt: new Date(),
-    }
+    },
   );
+
+  return 'Your Password reset successfully';
 };
 
 const sendEmailToAdmin = (email: string, message: string, subject: string) => {
@@ -309,11 +315,11 @@ const controllerService = async (transactionId: string, userId: string) => {
       {
         role: 'PREMIUM',
       },
-      { new: true }
+      { new: true },
     );
     const successfilePath = join(
       __dirname,
-      '../../../../public/confirmation.html'
+      '../../../../public/confirmation.html',
     );
     const template = readFileSync(successfilePath, 'utf-8');
     return template;

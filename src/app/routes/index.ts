@@ -7,6 +7,8 @@ import { RatingRoutes } from '../modules/Rating/rating.route';
 import { VoteRoutes } from '../modules/Vote/vote.routes';
 import { CommunityRoutes } from '../modules/Community/community.routes';
 import { FollowerRoutes } from '../modules/Follower/followers.routes';
+import { StatsRoutes } from '../modules/Stats/stats.route';
+import { BlogRoutes } from '../modules/Blog/blog.route';
 
 const router = express.Router();
 
@@ -43,7 +45,15 @@ const moduleRoutes = [
   {
     path: '/followers',
     route: FollowerRoutes,
-  }
+  },
+  {
+    path: '/stats',
+    route: StatsRoutes,
+  },
+  {
+    path: '/blog',
+    route: BlogRoutes,
+  },
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

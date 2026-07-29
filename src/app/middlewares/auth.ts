@@ -21,10 +21,12 @@ const auth = (...requiredRoles: (keyof typeof USER_ROLE)[]) => {
 
     const decoded = verifyToken(
       token,
-      config.jwt_access_secret as string
+      config.jwt_access_secret as string,
     ) as JwtPayload;
 
     const { role, email, iat } = decoded;
+
+    // console.log({ decoded });
 
     // checking if the user is exist
     const user = await User.isUserExistsByEmail(email);
@@ -44,7 +46,7 @@ const auth = (...requiredRoles: (keyof typeof USER_ROLE)[]) => {
       user.passwordChangedAt &&
       User.isJWTIssuedBeforePasswordChanged(
         user.passwordChangedAt,
-        iat as number
+        iat as number,
       )
     ) {
       throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized !');
@@ -55,6 +57,9 @@ const auth = (...requiredRoles: (keyof typeof USER_ROLE)[]) => {
     }
 
     req.user = decoded as JwtPayload;
+
+    // console.log(req.user);
+
     next();
   });
 };

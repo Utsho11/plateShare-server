@@ -39,6 +39,15 @@ const getAllRecipesFromDB = async (query: Record<string, unknown>) => {
   return result;
 };
 
+const getRecipesByAuthorFromDB = async (authorId: string) => {
+  const result = await Recipe.find({ author: authorId, isDeleted: false })
+    .populate('author', '_id name email profilePhoto')
+    .populate('upvoteCount')
+    .populate('downvoteCount')
+    .sort('-createdAt');
+  return result;
+};
+
 
 
 const getSingleRecipeFromDB = async (itemId: string) => {
@@ -127,6 +136,7 @@ const deleteRecipeFromDB = async (id: string) => {
 export const RecipeServices = {
   createRecipeIntoDB,
   getAllRecipesFromDB,
+  getRecipesByAuthorFromDB,
   getSingleRecipeFromDB,
   updateRecipeIntoDB,
   deleteRecipeFromDB,

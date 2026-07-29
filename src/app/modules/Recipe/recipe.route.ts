@@ -22,6 +22,14 @@ router.post(
 
 router.get('/', RecipeControllers.getAllRecipe);
 
+router.get(
+  '/my-recipes',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+  RecipeControllers.getMyRecipes
+);
+
+router.get('/author/:authorId', RecipeControllers.getRecipesByAuthor);
+
 router.get('/:id', RecipeControllers.getSingleRecipe);
 
 router.patch(
