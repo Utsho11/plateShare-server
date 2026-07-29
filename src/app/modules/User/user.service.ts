@@ -42,7 +42,10 @@ const updateUserProfile = async (id: string, req: Request) => {
     throw new AppError(404, 'User not found');
   }
 
-  const updatedUser = await User.findByIdAndUpdate(id, data);
+  const updatedUser = await User.findByIdAndUpdate(id, data, {
+    new: true,
+    runValidators: true,
+  });
 
   return updatedUser;
 };

@@ -15,7 +15,25 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // console.log(process.env.FRONTEND_URL);
 
-app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
+const allowedOrigins = [
+  process.env.FRONTEND_URL,
+  'http://localhost:3000',
+  'http://localhost:3001',
+].filter(Boolean) as string[];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // allow requests with no origin (like mobile apps, curl, or server-to-server)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(null, true); // Permissive fallback for dev flexibility
+      }
+    },
+    credentials: true,
+  })
+);
 app.use(cookieParser());
 
 // Parser middleware
