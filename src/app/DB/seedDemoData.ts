@@ -4,7 +4,7 @@ import config from '../config';
 import { User } from '../modules/User/user.model';
 import { Recipe } from '../modules/Recipe/recipe.model';
 import { Community } from '../modules/Community/community.model';
-import { Vote } from '../modules/Vote/vote.model';
+import { UpVote, DownVote } from '../modules/Vote/vote.model';
 import { Comment } from '../modules/Comment/comment.model';
 import { USER_ROLE, USER_STATUS, USER_TYPE } from '../modules/User/user.constant';
 import { RECIPE_CATEGORY, RECIPE_STATUS, RECIPE_TYPE } from '../modules/Recipe/recipe.constant';
@@ -19,7 +19,8 @@ const seedDemoData = async () => {
     await User.deleteMany({});
     await Recipe.deleteMany({});
     await Community.deleteMany({});
-    await Vote.deleteMany({});
+    await UpVote.deleteMany({});
+    await DownVote.deleteMany({});
     await Comment.deleteMany({});
 
     const saltRounds = Number(config.bcrypt_salt_rounds) || 10;
@@ -239,9 +240,9 @@ const seedDemoData = async () => {
       {
         title: 'Vegan Quinoa & Roasted Veggie Buddha Bowl',
         description: 'Nutritious plant-based bowl packed with fluffy quinoa, roasted chickpeas, sweet potatoes, kale, and creamy tahini dressing.',
-        category: RECIPE_CATEGORY.VEGAN,
+        category: RECIPE_CATEGORY.LUNCH,
         recipeStatus: RECIPE_STATUS.REGULAR,
-        recipeType: RECIPE_TYPE.VEG,
+        recipeType: RECIPE_TYPE.VEGAN,
         cookingTime: '30 minutes',
         author: chefAisha._id,
         images: [
@@ -292,7 +293,7 @@ const seedDemoData = async () => {
       {
         title: 'Crispy Garlic Parmesan Air-Fryer Wings',
         description: 'Ultra-crispy chicken wings coated in melted garlic butter, fresh parsley, and grated Parmesan cheese made fast in the air fryer.',
-        category: RECIPE_CATEGORY.SNACK,
+        category: RECIPE_CATEGORY.SNACKS,
         recipeStatus: RECIPE_STATUS.REGULAR,
         recipeType: RECIPE_TYPE.NON_VEG,
         cookingTime: '25 minutes',
@@ -321,12 +322,12 @@ const seedDemoData = async () => {
     console.log(`Successfully seeded ${createdRecipes.length} recipes!`);
 
     console.log('Seeding demo votes...');
-    await Vote.create([
-      { user: chefMarco._id, recipe: createdRecipes[0]._id, voteType: 'UPVOTE' },
-      { user: chefAisha._id, recipe: createdRecipes[0]._id, voteType: 'UPVOTE' },
-      { user: demoUser._id, recipe: createdRecipes[0]._id, voteType: 'UPVOTE' },
-      { user: chefKenji._id, recipe: createdRecipes[1]._id, voteType: 'UPVOTE' },
-      { user: demoUser._id, recipe: createdRecipes[1]._id, voteType: 'UPVOTE' },
+    await UpVote.create([
+      { user: chefMarco._id, post: createdRecipes[0]._id },
+      { user: chefAisha._id, post: createdRecipes[0]._id },
+      { user: demoUser._id, post: createdRecipes[0]._id },
+      { user: chefKenji._id, post: createdRecipes[1]._id },
+      { user: demoUser._id, post: createdRecipes[1]._id },
     ]);
 
     console.log('Seeding demo communities...');
