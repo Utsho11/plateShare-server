@@ -9,6 +9,7 @@ import { CommunityRoutes } from '../modules/Community/community.routes';
 import { FollowerRoutes } from '../modules/Follower/followers.routes';
 import { StatsRoutes } from '../modules/Stats/stats.route';
 import { BlogRoutes } from '../modules/Blog/blog.route';
+import { BookmarkRoutes } from '../modules/Bookmark/bookmark.route';
 
 const router = express.Router();
 
@@ -53,6 +54,10 @@ const moduleRoutes = [
   {
     path: '/blog',
     route: BlogRoutes,
+  },
+  {
+    path: '/bookmark',
+    route: BookmarkRoutes,
   },
 ];
 
