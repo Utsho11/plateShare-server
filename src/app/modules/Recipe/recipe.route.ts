@@ -35,6 +35,8 @@ router.get('/:id', RecipeControllers.getSingleRecipe);
 router.patch(
   '/update/:id',
   auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+  multerUpload.fields([{ name: 'files' }]),
+  parseBody,
   RecipeControllers.updateRecipe
 );
 

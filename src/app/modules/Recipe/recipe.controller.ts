@@ -77,7 +77,8 @@ const updateRecipe = catchAsync(async (req, res) => {
   const updatedItem = await RecipeServices.updateRecipeIntoDB(
     id,
     req.body,
-    u_email
+    u_email,
+    req.files as TImageFiles
   );
 
   sendResponse(res, {

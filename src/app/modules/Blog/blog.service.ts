@@ -9,8 +9,12 @@ const BlogSearchableFields = ['title', 'content', 'category', 'tags'];
 
 const createBlogIntoDB = async (
   payload: TBlog,
-  authorId: string
+  authorId: string,
+  file?: Express.Multer.File
 ): Promise<TBlog> => {
+  if (file?.path) {
+    payload.coverImage = file.path;
+  }
   const result = await Blog.create({ ...payload, author: authorId });
   return result;
 };
@@ -46,7 +50,8 @@ const updateBlogIntoDB = async (
   id: string,
   updateData: Partial<TBlog>,
   userEmail: string,
-  isAdmin: boolean
+  isAdmin: boolean,
+  file?: Express.Multer.File
 ) => {
   const blog = await Blog.findOne({ _id: id, isDeleted: false })
     .populate<{ author: Pick<TUser, 'email'> }>('author', 'email')
@@ -67,6 +72,10 @@ const updateBlogIntoDB = async (
       httpStatus.FORBIDDEN,
       'You are not authorized to update this blog!'
     );
+  }
+
+  if (file?.path) {
+    updateData.coverImage = file.path;
   }
 
   const updatedBlog = await Blog.findByIdAndUpdate(id, updateData, {

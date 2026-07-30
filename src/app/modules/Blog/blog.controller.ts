@@ -5,7 +5,11 @@ import { BlogServices } from './blog.service';
 
 const createBlog = catchAsync(async (req, res) => {
   const authorId = req.user?.id;
-  const blog = await BlogServices.createBlogIntoDB(req.body, authorId);
+  const blog = await BlogServices.createBlogIntoDB(
+    req.body,
+    authorId,
+    req.file as Express.Multer.File
+  );
 
   sendResponse(res, {
     success: true,
@@ -44,7 +48,8 @@ const updateBlog = catchAsync(async (req, res) => {
     req.params.id,
     req.body,
     userEmail,
-    isAdmin
+    isAdmin,
+    req.file as Express.Multer.File
   );
 
   sendResponse(res, {

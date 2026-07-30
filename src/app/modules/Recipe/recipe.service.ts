@@ -62,7 +62,8 @@ const getSingleRecipeFromDB = async (itemId: string) => {
 const updateRecipeIntoDB = async (
   id: string,
   updateData: Partial<TRecipe>,
-  userEmail: string
+  userEmail: string,
+  images?: TImageFiles
 ) => {
   const recipe = await Recipe.findOne({ _id: id, isDeleted: false })
     .populate<{ author: Pick<TUser, 'email'> }>('author', 'email')
@@ -82,6 +83,10 @@ const updateRecipeIntoDB = async (
       httpStatus.FORBIDDEN,
       'You are not authorized to update this recipe!'
     );
+  }
+
+  if (images?.files && images.files.length > 0) {
+    updateData.images = images.files.map((file) => file.path);
   }
 
   const updatedRecipe = await Recipe.findByIdAndUpdate(id, updateData, {
