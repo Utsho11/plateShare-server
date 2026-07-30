@@ -11,5 +11,20 @@
       "src": "/(.*)",
       "dest": "src/api/index.ts"
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "MONGODB_URI": "mongodb+srv://utsho_roy:utsho%401244@cluster0.2g6iibi.mongodb.net/plateShareDB?appName=Cluster0",
+    "BCRYPT_SALT_ROUNDS": "12",
+    "JWT_ACCESS_SECRET": "8a8e81e8b1c8f907d6ec59478c39902328d7c85fee34d8f11ba5a05d1eae7bea",
+    "JWT_ACCESS_EXPIRES_IN": "30d",
+    "JWT_REFRESH_SECRET": "52b39f390d0bb375e65a8a87f80db3b5983e6a59afce460e1de1f5cdae36638d",
+    "JWT_REFRESH_EXPIRES_IN": "30d",
+    "ADMIN_EMAIL": "admin@gmail.com",
+    "ADMIN_PASSWORD": "password123",
+    "CLOUDINARY_CLOUD_NAME": "dedov7ch9",
+    "CLOUDINARY_API_KEY": "744545112574772",
+    "CLOUDINARY_API_SECRET": "ei1TxrV_5XIp4molcjSETptFilw",
+    "FRONTEND_URL": "https://plate-share.vercel.app"
+  }
 }
