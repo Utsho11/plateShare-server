@@ -17,8 +17,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const allowedOrigins = [
   process.env.FRONTEND_URL,
-  'http://localhost:3000',
-  'http://localhost:3001',
+  'https://plate-share.vercel.app'
 ].filter(Boolean) as string[];
 
 app.use(
